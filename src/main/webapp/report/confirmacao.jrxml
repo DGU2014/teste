@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relatorio_recibo" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2d14f459-9e39-4c09-ad0d-4f00198925e8">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="id" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select *from pagamento_mss,cliente_mss,funcionario where pagamento_mss.id_cliente=cliente_mss.id_cliente
+and
+funcionario.id_funcionario=pagamento_mss.id_funcionario
+and
+
+ pagamento_mss.ref_pag="$P{id}";]]>
+	</queryString>
+	<field name="id_pag" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="id_cliente" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Valor_p" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="valor_extenso" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ref_pag" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tipo_pagamento" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="id_factura" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="data_pagamento" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="id_funcionario" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Nome" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Nacionalidade" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Morada" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Bi" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Nuit" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Contacto" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Alternativo" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Banco" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Conta" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Nib" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Email" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Obs_cliente" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="senha" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="user" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="categoria" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nome_utilizador" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="genero_professor" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="morada_professor" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="bilhete_professor" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="contacto_professor" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="contacto_alternativo" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="observacao_professor" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nr_p" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="email_funcionario" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="102" splitType="Stretch">
+			<staticText>
+				<reportElement x="346" y="17" width="100" height="21" forecolor="#FF0033" uuid="08e9b6e1-eeda-45a6-aace-af4cf9d4d033"/>
+				<textElement textAlignment="Right">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[N° 000000000]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="291" y="17" width="74" height="21" uuid="99071cb4-4832-48d1-b718-f85243385503"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[RECIBO ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="442" y="19" width="58" height="20" forecolor="#FF0033" uuid="845687bd-dd09-4eb5-99a8-65f8bab6c451"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{id_pag}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="346" y="57" width="187" height="1" forecolor="#CCCCCC" uuid="b245dbfc-d846-4cab-b5a1-e8045fad8689"/>
+				<graphicElement>
+					<pen lineWidth="25.25"/>
+				</graphicElement>
+			</line>
+			<textField pattern="#,##0.00">
+				<reportElement x="281" y="49" width="221" height="20" uuid="6a8fb828-d337-4616-a776-efedd67a5d6d"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Valor_p}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="500" y="48" width="34" height="20" uuid="1e2fdbb9-49ac-4321-8a62-d3bc4a24f3b3"/>
+				<textElement>
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="27" y="78" width="208" height="14" uuid="17d52770-2c80-4e68-b1e0-591758c7b379"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Av. 25 de Setembro 1509 5° Andar `a directa porta 56]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="26" y="88" width="205" height="14" uuid="7a514266-25b3-4581-9e65-0935d40d715d"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Telefax: 21333630 / NUIT: 400 190331]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="27" y="68" width="208" height="14" uuid="41eca4bc-ac5c-4420-acf4-a44b694b64f4"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Cédula n° DESP/213/DGA/07]]></text>
+			</staticText>
+			<image>
+				<reportElement x="30" y="5" width="117" height="58" uuid="75dd7730-1d2e-43aa-a08a-8759d9481f1c"/>
+				<imageExpression><![CDATA["C:\\wamp\\www\\DPAD\\dpad\\pf\\Consad11.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="12" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="286" splitType="Stretch">
+			<staticText>
+				<reportElement x="25" y="14" width="512" height="19" uuid="1379feda-a771-4cff-8306-2f89f3e9b708"/>
+				<textElement>
+					<font fontName="Arial" size="14"/>
+				</textElement>
+				<text><![CDATA[Recebemos  do/a Sr/a  ---------------------------------------------------------------------]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="25" y="56" width="80" height="20" uuid="544db21a-90b4-49c4-9aed-0f6006877ba0"/>
+				<textElement>
+					<font fontName="Arial" size="14"/>
+				</textElement>
+				<text><![CDATA[a quantia de ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="25" y="108" width="238" height="20" uuid="7598229d-218c-4511-a9c4-32f9eb96cd3c"/>
+				<textElement>
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<text><![CDATA[proviniente do pagamento da factura n°]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="25" y="33" width="512" height="20" uuid="6886ac22-fec8-4588-8df0-262dcdda3d26"/>
+				<text><![CDATA[-------------------------------------------------------------------------------------------------------------------------------------------------]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="25" y="128" width="509" height="20" uuid="270440b3-3ce7-4d1b-9d40-ec5771e7bffc"/>
+				<textElement>
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<text><![CDATA[de que passamos o presente recibo,]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="415" y="184" width="74" height="20" uuid="0cd7d007-fde5-46de-bb1b-33df69c76c29"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<text><![CDATA[Assinatura]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="368" y="160" width="40" height="20" uuid="7cc09985-9322-4fc8-acd9-051d08b28d37"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<text><![CDATA[Maputo,]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="25" y="156" width="137" height="20" uuid="10db55de-9b4f-4d90-86fa-1cc009717d65"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Forma de pagamento :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="25" y="176" width="107" height="20" uuid="d69c127d-2e5b-4cf8-aca7-4fe485cd4639"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Referência:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="239" width="555" height="20" uuid="c36482fc-fa11-4d03-b24f-e27ac0ccd0d9"/>
+				<text><![CDATA[------------------------------------------------------------------------------------------------------------------------------------------------------------------]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="174" y="9" width="359" height="20" uuid="140c09bd-2581-47da-bf04-b43389e15187"/>
+				<textElement>
+					<font fontName="Arial" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Nome}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MM/dd/yyyy">
+				<reportElement x="415" y="160" width="100" height="20" uuid="215de59d-89b7-4f7d-89ad-fd412288c69c"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="162" y="156" width="203" height="20" uuid="035fe8dc-1885-4021-8c84-783e4b966283"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tipo_pagamento}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="105" y="65" width="432" height="1" forecolor="#CCCCCC" uuid="fde0da57-ffd2-478c-ae1e-6304c4213d8e"/>
+				<graphicElement>
+					<pen lineWidth="21.0"/>
+				</graphicElement>
+			</line>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="111" y="56" width="404" height="20" uuid="aea141bc-ac0e-427a-a9d1-5cfa989d0661"/>
+				<textElement>
+					<font fontName="Arial" size="12" isBold="false"/>
+					<paragraph lineSpacing="Proportional" lineSpacingSize="20.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valor_extenso}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="25" y="93" width="512" height="1" forecolor="#CCCCCC" uuid="5169a0b3-f2c2-4ff4-b0b1-4126d5fb765c"/>
+				<graphicElement>
+					<pen lineWidth="21.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="358" y="216" width="175" height="1" uuid="fc65cbe9-dff1-4681-90f4-36d8a7a2f74f"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="11" y="228" width="151" height="7" uuid="bee7df44-1344-4784-802a-bb975fbfcf09"/>
+				<textElement>
+					<font fontName="Arial" size="6"/>
+				</textElement>
+				<text><![CDATA[licença da MSS DESP /versão 0.1.0]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="237" y="228" width="54" height="12" uuid="168fc6b9-bfd2-46e6-8ab0-bd7225d490e7"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
+					<font fontName="Arial" size="6"/>
+				</textElement>
+				<text><![CDATA[Funcionário:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="281" y="228" width="252" height="12" uuid="1f915fd1-7e24-415b-b8c0-c4cfc48b36db"/>
+				<textElement>
+					<font fontName="Arial" size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nome_utilizador}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="215" y="108" width="80" height="20" uuid="67114134-71a2-4e6e-8c86-3fd758d5e6cd"/>
+				<textElement>
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{id_factura}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

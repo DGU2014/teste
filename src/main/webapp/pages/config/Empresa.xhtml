@@ -1,0 +1,280 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="title">
+      Empresa
+    </ui:define>
+	<ui:define name="description">
+       Página dedicada ao cadastro, actualização e remoção da Empresa
+    </ui:define>
+
+
+	<ui:define name="body">
+
+
+		<adm:breadcrumb title="Empresa" />
+		<h:form id="formCadastro">
+
+			<div class="box box-info">
+				<div class="box-header with-border">
+
+					<p:toolbar style="margin-top: 10px">
+						<p:toolbarGroup>
+
+							<p:commandButton icon="fa fa-fw fa-plus" value="Novo"
+								styleClass="btn-block btn-primary"
+								rendered="#{empresaBean.painelListar}"
+								actionListener="#{empresaBean.novo}" update="@form" />
+
+							<p:panelGrid columns="2" layout="grid">
+								<p:commandButton id="salvar" value="Salvar" icon="ui-icon-check"
+									actionListener="#{empresaBean.salvar}"
+									styleClass="btn-block btn-success"
+									rendered="#{empresaBean.btnCancelar}" update="@form" />
+
+								<p:commandButton value="Cancelar" immediate="true"
+									styleClass="btn-block btn-warning"
+									rendered="#{empresaBean.btnCancelar}"
+									actionListener="#{empresaBean.cancelar}" update="@form" />
+
+							</p:panelGrid>
+							<p:commandButton id="alterar" value="Alterar"
+								icon="ui-icon-check" actionListener="#{empresaBean.salvar}"
+								styleClass="btn-block btn-success"
+								rendered="#{empresaBean.btnAlterar}" update="@form" />
+						</p:toolbarGroup>
+
+					</p:toolbar>
+
+					<div class="ui-fluid">
+						<h:panelGroup id="contadorPainel" layout="block"
+							styleClass="ui-fluid">
+							<p:panelGrid id="painel" rendered="#{empresaBean.painelCadastro}"
+								columns="2" layout="grid" style="margin-top:20px"
+								styleClass="panelgrid-noborder"
+								columnClasses="ui-grid-col-2,ui-grid-col-10">
+
+								<p:outputLabel value="Empresa" for="empresa" />
+								<p:inputText id="empresa" value="#{empresaBean.empresa.nome}">
+								</p:inputText>
+
+								<p:outputLabel value="Nuit" for="nuit" />
+								<p:inputText id="nuit" value="#{empresaBean.empresa.nuit}">
+								</p:inputText>
+
+								<p:outputLabel for="logo" value="Logo" />
+								<p:row>
+									<p:column colspan="5">
+										<p:graphicImage cache="false" height="auto" width="100"
+											name="images/ubiLogo/#{empresaBean.empresa.codigo}.png"
+											value="images/ubiLogo/#{empresaBean.empresa.codigo}.png" />
+									</p:column>
+									<p:column colspan="7">
+										<p:fileUpload id="upload" mode="advanced"
+											fileUploadListener="#{empresaBean.upload}"
+											update=":formCadastro:logo" />
+
+										<p:graphicImage id="logo" value="#{imagemBean.foto}">
+											<f:param name="logo" value="#{empresaBean.empresa.logo}" />
+										</p:graphicImage>
+									</p:column>
+								</p:row>
+
+								<p:outputLabel for="modoFuncionamento"
+									value="Modo de funcionamento:" />
+								<p:selectOneMenu id="modoFuncionamento"
+									value="#{empresaBean.empresa.modoFuncionamento}"
+									required="false">
+									<f:selectItem itemLabel="Normal(Venda Produtos/Serviços)"
+										itemValue="composto" />
+									<f:selectItem itemLabel="Venda Produtos" itemValue="simplesPd" />
+									<f:selectItem itemLabel="Venda Serviços" itemValue="simplesSer" />
+								</p:selectOneMenu>
+
+								<p:outputLabel for="modulo" value="Modulos do Sistema:" />
+								<p:selectOneMenu id="modulo"
+									value="#{empresaBean.empresa.modulo}" required="false">
+									<f:selectItem itemLabel="Completo" itemValue="completo" />
+									<f:selectItem itemLabel="facturacao" itemValue="facturacao" />
+									<f:selectItem itemLabel="Estoque" itemValue="estoque" />
+								</p:selectOneMenu>
+
+								<p:outputLabel value="Iva Incluso no Total" for="ivaIncluso" />
+								<p:selectBooleanCheckbox id="ivaIncluso"
+									value="#{empresaBean.empresa.ivaInclusoTotal}" required="true"
+									requiredMessage="O campo Iva Incluso e obrigatorio" />
+
+								<p:outputLabel value="Morada" for="morada" />
+								<p:inputText id="morada" value="#{empresaBean.empresa.morada}"
+									required="true" requiredMessage="O campo Morada e obrigatorio" />
+
+
+								<p:outputLabel value="Cidade" for="cidade" />
+								<p:inputText id="cidade" value="#{empresaBean.empresa.cidade}"
+									required="true" requiredMessage="O campo Cidade e obrigatorio" />
+
+
+								<p:outputLabel value="Pais" for="pais" />
+								<p:inputText id="pais" value="#{empresaBean.empresa.pais}">
+								</p:inputText>
+
+								<p:outputLabel value="Email" for="email" />
+								<p:inputText id="email" value="#{empresaBean.empresa.email}" />
+
+								<p:outputLabel value="Tel" for="telefone" />
+								<p:inputText id="telefone"
+									value="#{empresaBean.empresa.telefone}">
+								</p:inputText>
+
+								<p:outputLabel value="Celular (84)" for="celular" />
+								<p:inputText id="celular" value="#{empresaBean.empresa.celular}">
+								</p:inputText>
+
+								<p:outputLabel value="Celular (82)" for="celular2" />
+								<p:inputText id="celular2"
+									value="#{empresaBean.empresa.celular2}">
+								</p:inputText>
+
+								<p:outputLabel value="Celular (86)" for="celular3" />
+								<p:inputText id="celular3"
+									value="#{empresaBean.empresa.celular3}">
+								</p:inputText>
+
+								<p:outputLabel value="WebSite" for="site" />
+								<p:inputText id="site" value="#{empresaBean.empresa.websiste}">
+								</p:inputText>
+
+								<p:outputLabel value="Banco" for="banco1" />
+								<p:inputText id="banco1" value="#{empresaBean.empresa.banco1}">
+								</p:inputText>
+
+								<p:outputLabel value="Nr da Conta" for="nrConta1" />
+								<p:inputText id="nrConta1" value="#{empresaBean.empresa.conta1}">
+								</p:inputText>
+
+
+								<p:outputLabel value="Nib" for="nib1" />
+								<p:inputText id="nib1" value="#{empresaBean.empresa.nib1}">
+								</p:inputText>
+
+
+
+								<p:outputLabel value="Banco" for="banco2" />
+								<p:inputText id="banco2" value="#{empresaBean.empresa.banco2}">
+								</p:inputText>
+
+								<p:outputLabel value="Nr da Conta" for="nrConta2" />
+								<p:inputText id="nrConta2" value="#{empresaBean.empresa.conta2}">
+								</p:inputText>
+
+
+								<p:outputLabel value="Nib" for="nib2" />
+								<p:inputText id="nib2" value="#{empresaBean.empresa.nib2}">
+								</p:inputText>
+
+								<p:outputLabel value="Banco" for="banco3" />
+								<p:inputText id="banco3" value="#{empresaBean.empresa.banco3}">
+								</p:inputText>
+
+								<p:outputLabel value="Nr da Conta" for="nrConta3" />
+								<p:inputText id="nrConta3" value="#{empresaBean.empresa.conta3}">
+								</p:inputText>
+
+
+								<p:outputLabel value="Nib" for="nib3" />
+								<p:inputText id="nib3" value="#{empresaBean.empresa.nib3}">
+								</p:inputText>
+
+								<p:outputLabel value="Chave AT" for="chave" />
+								<p:inputText id="chave"
+									value="#{empresaBean.empresa.activacaoFacturacao}">
+								</p:inputText>
+							</p:panelGrid>
+
+							<h:panelGrid layout="grid" styleClass="panelgrid-noborder"
+								columns="2">
+
+							</h:panelGrid>
+
+						</h:panelGroup>
+					</div>
+
+					<!-- Listagem -->
+
+					<p:dataTable id="tabela" emptyMessage="Nenhum registo encontrado"
+						rendered="#{empresaBean.painelListar}"
+						value="#{empresaBean.empresas}" var="empresa" reflow="true"
+						style="margin-top:20px">
+
+						<p:column headerText="Cdg" style="width:45px">
+							<h:outputText value="#{empresa.codigo}" />
+						</p:column>
+						<p:column headerText="Nuit" style="width:80px">
+							<h:outputText value="#{empresa.nuit}" />
+						</p:column>
+						<p:column headerText="Empresa" filterBy="#{empresa.nome}">
+							<h:outputText value="#{empresa.nome}" />
+						</p:column>
+						<p:column headerText="Modo Func" style="width:100px"
+							filterBy="#{empresa.modoFuncionamento}">
+							<h:outputText value="#{empresa.modoFuncionamento}" />
+						</p:column>
+						<p:column headerText="Iva Incluso No total" style="width:100px">
+							<h:outputText value="#{empresa.ivaInclusoTotal}" />
+						</p:column>
+						<p:column headerText="Modulo" style="width:150px">
+							<h:outputText value="#{empresa.modulo}" />
+						</p:column>
+						<p:column headerText="Opções" style="width:130px">
+							<div class="row">
+
+								<div class="col-sm-12 col-md-3">
+									<p:commandButton icon="fa fa-fw fa-edit" update="@form"
+										styleClass="btn-block btn-primary"
+										actionListener="#{empresaBean.carregarEmpresa}">
+										<f:attribute name="empresaSelecionada" value="#{empresa}" />
+										<f:actionListener
+											type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+									</p:commandButton>
+								</div>
+
+								<div class="col-sm-12 col-md-3">
+									<p:commandButton icon="fa fa-fw fa-remove"
+										styleClass="btn-block btn-danger"
+										actionListener="#{empresaBean.excluir}" update="@form">
+										<p:confirm header="Confirmação"
+											message="Deseja excluir o Empresa ?" />
+										<f:attribute name="empresaSelecionada" value="#{empresa}" />
+										<f:actionListener
+											type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+									</p:commandButton>
+								</div>
+							</div>
+						</p:column>
+
+					</p:dataTable>
+
+					<p:confirmDialog global="true">
+						<p:commandButton value="Sim" type="button"
+							styleClass="ui-confirmdialog-yes btn-block btn-warning"
+							icon="ui-icon-check" />
+						<p:commandButton value="Não" type="button"
+							styleClass="ui-confirmdialog-no btn-block btn-danger"
+							icon="ui-icon-close" />
+					</p:confirmDialog>
+
+
+				</div>
+			</div>
+
+			<p:defaultCommand target="salvar" />
+		</h:form>
+
+	</ui:define>
+</ui:composition>

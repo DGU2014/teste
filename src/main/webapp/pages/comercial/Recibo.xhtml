@@ -1,0 +1,142 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="title">
+     Recibos
+    </ui:define>
+	<ui:define name="description">
+      Página dedicada a visualização dos recibos emitidos.
+    </ui:define>
+
+	<ui:define name="body">
+		<adm:breadcrumb title="Rel de Vendas" />
+
+		<h:form id="formPesquisa">
+
+			<p:toolbar style="margin-top: 10px">
+				<p:toolbarGroup>
+
+					<p:selectOneRadio value="#{reciboBean.pesquisa}"
+						style="width: 280px;">
+						<f:selectItem itemLabel="Diario" itemValue="1" />
+						<f:selectItem itemLabel="Entervalo de dias" itemValue="2" />
+						<f:ajax listener="#{reciboBean.adicionarComponentes}"
+							render="formPesquisaComponentes formListagem:tabela formListagem:total" />
+					</p:selectOneRadio>
+
+				</p:toolbarGroup>
+			</p:toolbar>
+		</h:form>
+
+		<h:form id="formPesquisaComponentes">
+
+			<p:panelGrid id="painel" columns="4" layout="grid"
+				style="margin-top:20px" styleClass="panelgrid-noborder"
+				columnClasses="ui-grid-col-2,ui-grid-col-4,
+			ui-grid-col-2, ui-grid-col-4">
+
+				<h:outputLabel value="Dia"
+					rendered="#{reciboBean.dataComponenteLabel}" />
+				<h:outputLabel value="Data Inicio"
+					rendered="#{reciboBean.dataInicioComponente}" />
+				<p:calendar id="dia" navigator="true" effect="fold"
+					rendered="#{reciboBean.dataComponente}"
+					value="#{reciboBean.dataUnico}">
+					<f:ajax listener="#{reciboBean.listar}" event="dateSelect"
+						render="formListagem:tabela formListagem:total formPesquisaComponentes:fim" />
+				</p:calendar>
+
+				<h:outputLabel value="Data Fim"
+					rendered="#{reciboBean.dataFimComponente}" />
+				<p:calendar id="fim" navigator="true" required="false"
+					disabled="#{reciboBean.calendario2}"
+					rendered="#{reciboBean.dataFimComponente}"
+					value="#{reciboBean.dataFim}">
+					<f:ajax listener="#{reciboBean.listar}" event="dateSelect"
+						render="formListagem:tabela formListagem:total" />
+				</p:calendar>
+
+			</p:panelGrid>
+
+		</h:form>
+		<h:form id="formListagem">
+			<p:dataTable id="tabela" value="#{reciboBean.recibos}"
+				emptyMessage="Nenhuma Venda Efectuada nesta Data"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+				paginator="true" rows="10" style="margin-bottom:20px" var="recibo"
+				reflow="true">
+
+				<p:column headerText="Cod" style="width:100px">
+					<h:outputText value="#{recibo.codigoRC}" />
+				</p:column>
+				<p:column headerText="Cliente">
+					<h:outputText value="#{recibo.factura.venda.cliente.pessoa.nome}" />
+				</p:column>
+				<p:column headerText="Dta de Emissão" style="width:168px">
+					<h:outputText value="#{recibo.data}" />
+				</p:column>
+
+				<p:column headerText="Subtotal" style="width:100px">
+					<h:outputText value="#{recibo.valorSubtotal}" />
+				</p:column>
+
+				<p:column headerText="Iva" style="width:100px">
+					<h:outputText value="#{recibo.valorPagoIva}" />
+				</p:column>
+
+				<p:column headerText="Total" style="width:100px">
+					<h:outputText value="#{recibo.valorTotal}" />
+				</p:column>
+
+				<p:column headerText="Nr Da Factura" style="width:100px">
+					<h:outputText value="#{recibo.factura.codigoFT}" />
+				</p:column>
+
+				<p:column headerText="Data Da Factura" style="width:100px">
+					<h:outputText value="#{recibo.factura.dataFacturacao}" />
+				</p:column>
+
+				<p:column headerText="Opções">
+					<p:commandButton icon="ui-icon-print"
+						styleClass="btn-block btn-primary"
+						onclick="PF('dlgPrimary').show();" value="Imprimir"
+						actionListener="#{reciboBean.carregarRecibo}"
+						update=":formListagem:tabela">
+						<f:attribute name="vendaSelecionada" value="#{recibo}" />
+						<f:actionListener
+							type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+					</p:commandButton>
+					<p:commandButton value="Cancelar"
+						actionListener="#{reciboBean.carregarRecibo}"
+						styleClass="btn-block btn-success"
+						oncomplete="PF('itemDialogo').show();">
+						<f:attribute name="vendaSelecionada" value="#{recibo}" />
+						<f:actionListener
+							type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+					</p:commandButton>
+				</p:column>
+
+			</p:dataTable>
+
+			<p:dialog header="Imprimir" styleClass="box-primary"
+				widgetVar="dlgPrimary" minHeight="100" modal="true">
+				<p:commandButton id="imprimirOriginal"
+					columnClasses="ui-grid-col-4,ui-grid-col-4"
+					action="#{reciboBean.imprimirOriginal}" ajax="false"
+					value="Original" icon="ui-icon-print" immediate="true" />
+				<p:commandButton id="imprimirVerso"
+					columnClasses="ui-grid-col-4,ui-grid-col-4"
+					action="#{reciboBean.imprimirVerso}" ajax="false" value="Verso"
+					icon="ui-icon-print" immediate="true" />
+
+				<p:commandButton id="btnFecha" value="Fechar"
+					icon="fa fa-times-circle" oncomplete="PF('dlgPrimary').hide();" />
+			</p:dialog>
+		</h:form>
+	</ui:define>
+</ui:composition>

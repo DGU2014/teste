@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+                                         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+ <session-factory>
+  <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+  <property name="connection.url">jdbc:mysql://localhost:3306/ubisse_ubi_v1</property>
+  <property name="connection.username">root</property>
+  <property name="connection.password"/>
+  <!-- Pool de Conexões -->
+  <property name="hibernate.connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property>
+  <property name="hibernate.c3p0.min_size">3</property>
+  <property name="hibernate.c3p0.max_size">10</property>
+  <property name="hibernate.c3p0.timeout">300</property>
+  <property name="hibernate.c3p0.max_statements">50</property>
+  <property name="hibernate.c3p0.idle_test_period">300</property>
+  <property name="hibernate.c3p0.acquire_increment">1</property>
+  <!-- SQL dialect -->
+  <property name="dialect">org.hibernate.dialect.MySQL5InnoDBDialect</property>
+  <!-- Gerenciamento do Contexto das Sessões -->
+  <property name="current_session_context_class">thread</property>
+  <!-- Cache de Segundo Nível -->
+  <property name="cache.provider_class">org.hibernate.cache.internal.NoCacheProvider</property>
+  <!-- Mostra as SQLs Geradas -->
+  <property name="show_sql">true</property>
+  <!-- Cria as tabelas do banco de dados -->
+  <property name="hbm2ddl.auto">update</property>
+  <property name="hibernate.current_session_context_class">thread</property>
+  <!-- Mapeamento das entidade -->
+  <mapping class="mz.co.ubisse.domain.Usuario"/>
+  <mapping class="mz.co.ubisse.domain.Funcionario"/>
+  <mapping class="mz.co.ubisse.domain.Pessoa"/>
+  <mapping class="mz.co.ubisse.domain.TipoPagamento"/>
+  <mapping class="mz.co.ubisse.domain.Cliente"/>
+  <mapping class="mz.co.ubisse.domain.Categoria"/>
+  <mapping class="mz.co.ubisse.domain.Cotacao"/>
+  <mapping class="mz.co.ubisse.domain.Factura"/>
+  <mapping class="mz.co.ubisse.domain.Fornecedor"/>
+  <mapping class="mz.co.ubisse.domain.GuiaDeRemessa"/>
+  <mapping class="mz.co.ubisse.domain.RequisicaoProduto"/>
+  <mapping class="mz.co.ubisse.domain.VendaDinheiro"/>
+  <mapping class="mz.co.ubisse.domain.Venda"/>
+  <mapping class="mz.co.ubisse.domain.ItemsVenda"/>
+  <mapping class="mz.co.ubisse.domain.Produto"/>
+  <mapping class="mz.co.ubisse.domain.Recibo"/>
+  <mapping class="mz.co.ubisse.domain.ItemsRequisicao"/>
+  <mapping class="mz.co.ubisse.domain.Historico"/>
+  <mapping class="mz.co.ubisse.domain.Empresa"/>
+  <mapping class="mz.co.ubisse.domain.NotaDeCredito"/>
+  <mapping class="mz.co.ubisse.domain.NotaDeDebido"/>
+  <mapping class="mz.co.ubisse.domain.ItemsDebido"/>
+  <mapping class="mz.co.ubisse.domain.DocumentosFactura"/>
+  <mapping class="mz.co.ubisse.domain.ItemsCredito"/>
+  <!-- Mapeamento das entidade -->
+ </session-factory>
+</hibernate-configuration>

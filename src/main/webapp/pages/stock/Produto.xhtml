@@ -1,0 +1,242 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="head-end">
+		<style type="text/css">
+div.ui-material {
+	margin-top: 20px;
+}
+
+input:-webkit-autofill {
+	-webkit-box-shadow: 0 0 0 30px white inset;
+}
+</style>
+	</ui:define>
+
+	<ui:define name="title">
+      Produtos
+    </ui:define>
+	<ui:define name="description">
+       Página dedicada ao cadastro, actualização e remoção de produtos
+    </ui:define>
+
+	<ui:define name="body">
+		<adm:breadcrumb title="Produto" />
+		<h:form id="formCadastro">
+
+			<div class="box box-info">
+				<div class="box-header with-border">
+
+					<p:toolbar style="margin-top: 10px">
+						<p:toolbarGroup>
+							<p:commandButton icon="fa fa-fw fa-plus" value="Novo"
+								styleClass="btn-block btn-primary"
+								rendered="#{produtoBean.painelListar}"
+								actionListener="#{produtoBean.novo}" update="@form" />
+							<p:panelGrid columns="2" layout="grid">
+								<p:commandButton id="salvar" value="Salvar" icon="ui-icon-check"
+									actionListener="#{produtoBean.salvar}"
+									styleClass="btn-block btn-success"
+									rendered="#{produtoBean.painelCadastro}"
+									update="messages @form" />
+
+								<p:commandButton value="Cancelar" immediate="true"
+									styleClass="btn-block btn-warning"
+									rendered="#{produtoBean.painelCadastro}"
+									actionListener="#{produtoBean.cancelar}" update="@form" />
+							</p:panelGrid>
+						</p:toolbarGroup>
+
+					</p:toolbar>
+
+					<div class="ui-fluid">
+
+						<h:panelGroup id="contadorPainel" layout="block"
+							styleClass="ui-fluid">
+							<p:panelGrid id="painel" rendered="#{produtoBean.painelCadastro}"
+								columns="3" layout="grid" style="margin-top:20px"
+								styleClass="panelgrid-noborder"
+								columnClasses="ui-grid-col-1,ui-grid-col-8,ui-grid-col-3">
+
+								<p:outputLabel for="categoria" value="Categoria:" />
+								<p:selectOneMenu id="categoria" filter="true"
+									value="#{produtoBean.produto.categoria}"
+									converter="omnifaces.SelectItemsConverter" required="true"
+									requiredMessage="O campo Tipo de Categoria é obrigatorio">
+									<f:selectItem noSelectionOption="true"
+										itemLabel="Selecione a Categoria" />
+									<f:selectItems value="#{produtoBean.categorias}"
+										var="categoria" itemValue="#{categoria}"
+										itemLabel="#{categoria.nome}" />
+								</p:selectOneMenu>
+								<p:message for="categoria" />
+
+								<p:outputLabel value="Codigo/Serie" for="referencia" />
+								<p:inputText id="referencia" style="max-width:300px"
+									value="#{produtoBean.produto.referencia}">
+								</p:inputText>
+								<p:message for="referencia" />
+
+
+								<p:outputLabel value="Descrição" for="descricao" />
+								<p:inputTextarea id="descricao"
+									value="#{produtoBean.produto.descricao}" required="true"
+									requiredMessage="O campo Descrição é obrigatorio" />
+
+								<p:message for="descricao" />
+
+								<p:outputLabel value="Preço Sem Iva" for="preco" />
+								<p:inputText id="preco" value="#{produtoBean.produto.preco}"
+									required="true"
+									requiredMessage="O Preço do produto é obrigatorio">
+									<f:convertNumber locale="pt_PT" minFractionDigits="2" />
+									<f:validateDoubleRange minimum="0.01" />
+									<f:ajax listener="#{produtoBean.calcularPrecoComIva}"
+										event="keyup" render=":formCadastro:precoComIva" />
+								</p:inputText>
+
+								<p:message for="preco" />
+
+								<p:outputLabel value="Preço Com Iva" for="precoComIva" />
+								<p:inputText id="precoComIva"
+									value="#{produtoBean.produto.precoIva}" required="true"
+									requiredMessage="O Preço Com Iva do produto é obrigatorio">
+									<f:convertNumber locale="pt_PT" minFractionDigits="2" />
+									<f:validateDoubleRange minimum="0.01" />
+									<f:ajax listener="#{produtoBean.calcularPrecoSemIva}"
+										event="keyup" render=":formCadastro:preco" />
+								</p:inputText>
+
+								<p:message for="precoComIva" />
+
+
+								<p:outputLabel value="Q. Loja" for="quantidade" />
+								<p:inputText id="quantidade"
+									value="#{produtoBean.produto.quantidade}"></p:inputText>
+
+								<p:outputLabel />
+								<p:outputLabel value="Q. Armazem" for="quantidadea" />
+								<p:inputText id="quantidadea"
+									value="#{produtoBean.produto.quantidadeArmazenada}"
+									required="false"
+									requiredMessage="A quantidade do produto Armazenado e obrigatorio">
+								</p:inputText>
+								<p:outputLabel />
+
+								<p:outputLabel value="Min Armazem" for="quantidadeMinimaArmazem" />
+								<p:spinner id="quantidadeMinimaArmazem" min="0"
+									value="#{produtoBean.produto.estoqueMinimoArmazem}"
+									required="false"
+									requiredMessage="A quantidade minima do estoque do produto e obrigatoria" />
+								<p:outputLabel />
+
+								<p:outputLabel value="Min Loja" for="quantidadeMinima" />
+								<p:spinner id="quantidadeMinima" min="0"
+									value="#{produtoBean.produto.estoqueMinimo}" required="false"
+									requiredMessage="A quantidade minima do estoque do produto e obrigatoria" />
+								<p:outputLabel />
+
+								<p:outputLabel value="Estado" for="estado" />
+								<p:selectBooleanCheckbox id="estado"
+									value="#{produtoBean.produto.estado}" required="true"
+									requiredMessage="O campo Estado e obrigatorio" />
+								<p:outputLabel />
+							</p:panelGrid>
+
+							<h:panelGrid layout="grid" styleClass="panelgrid-noborder"
+								columns="2">
+
+							</h:panelGrid>
+						</h:panelGroup>
+					</div>
+
+					<!-- Listagem -->
+
+					<p:dataTable id="tabela" emptyMessage="Nenhum registo encontrado"
+						rendered="#{produtoBean.painelListar}"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+						paginator="true" rows="20" value="#{produtoBean.produtos}"
+						var="produto" reflow="true">
+
+						<p:column headerText="Codigo" style="width:120px"
+							filterBy="#{produto.referencia}">
+							<h:outputText value="#{produto.referencia}" />
+						</p:column>
+						<p:column headerText="Categoria" style="width:150px"
+							filterBy="#{produto.categoria.nome}">
+							<h:outputText value="#{produto.categoria.nome}" />
+						</p:column>
+						<p:column headerText="Descrição" filterBy="#{produto.descricao}">
+							<h:outputText value="#{produto.descricao}" />
+						</p:column>
+
+						<p:column headerText="Preço Sem Iva" style="width:90px">
+							<h:outputText value="#{produto.preco}" />
+						</p:column>
+						<p:column headerText="Preço Com Iva" style="width:90px">
+							<h:outputText value="#{produto.precoIva}" />
+						</p:column>
+						<p:column headerText="Q.L" style="width:65px">
+							<h:outputText value="#{produto.quantidade}" />
+						</p:column>
+						<p:column headerText="Q.A" style="width:65px">
+							<h:outputText value="#{produto.quantidadeArmazenada}" />
+						</p:column>
+						<p:column headerText="E.minimo" style="width:90px">
+							<h:outputText value="#{produto.estoqueMinimo}" />
+						</p:column>
+						<p:column headerText="Opções" style="width:130px">
+
+							<p:commandButton icon="fa fa-edit" update="@form"
+								styleClass="btn-info"
+								actionListener="#{produtoBean.carregarProduto}">
+								<f:attribute name="produtoSelecionado" value="#{produto}" />
+								<f:actionListener
+									type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+							</p:commandButton>
+
+							<p:commandButton icon="fa fa-fw fa-remove"
+								styleClass="btn-block btn-danger"
+								actionListener="#{produtoBean.excluir}" update="@form">
+								<p:confirm header="Confirmação"
+									message="Deseja excluir o produto ?" icon="ui-icon-alert " />
+								<f:attribute name="produtoSelecionado" value="#{produto}" />
+								<f:actionListener
+									type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+							</p:commandButton>
+
+
+
+							<p:commandButton icon="fa fa-external-link" rendered="false"
+								update=":formDialogo1:painel1"
+								oncomplete="PF('dialogo1').show();"
+								actionListener="#{produtoBean.carregarProduto}">
+								<f:attribute name="produtoSelecionado" value="#{produto}" />
+								<f:actionListener
+									type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+							</p:commandButton>
+						</p:column>
+
+					</p:dataTable>
+
+					<p:confirmDialog global="true">
+						<p:commandButton value="Sim" type="button"
+							styleClass="ui-confirmdialog-yes btn-block btn-warning"
+							icon="ui-icon-check" />
+						<p:commandButton value="Não" type="button"
+							styleClass="ui-confirmdialog-no btn-block btn-danger"
+							icon="ui-icon-close" />
+					</p:confirmDialog>
+				</div>
+			</div>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>

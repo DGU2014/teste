@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="title">
+        Funcionario
+    </ui:define>
+
+	<ui:define name="description">
+       Página dedicada ao cadastro, actualização e remoção de funcionarios.
+    </ui:define>
+
+	<ui:define name="body">
+		<adm:breadcrumb title="Funcionario" />
+
+		<h:form id="formCadastro">
+			<p:messages id="messages" closable="true">
+				<p:effect type="pulsate" event="load" delay="500" />
+			</p:messages>
+
+			<p:toolbar style="margin-top: 10px">
+				<p:toolbarGroup>
+					<p:commandButton oncomplete="PF('dialogo').show();"
+						actionListener="#{funcionarioBean.novo}" icon="fa fa-user-plus"
+						value="Novo" styleClass="btn-block btn-primary"
+						update=":formDialogo:painel" />
+				</p:toolbarGroup>
+
+			</p:toolbar>
+		</h:form>
+
+		<h:form id="formListagem">
+			<p:dataTable id="tabela" rows="10" paginator="true"
+				emptyMessage="Nenhum registo encontrado" reflow="true"
+				value="#{funcionarioBean.funcionarios}" var="funcionario">
+
+				<p:column headerText="Cdg" style="width:50px">
+					<h:outputText value="#{funcionario.codigo}" />
+				</p:column>
+
+				<p:column filterBy="#{funcionario.pessoa.nome}" headerText="Nome">
+					<h:outputText value="#{funcionario.pessoa.nome}" />
+				</p:column>
+
+				<p:column headerText="Nuit" style="width:110px">
+					<h:outputText value="#{funcionario.pessoa.nuit}" />
+				</p:column>
+
+				<p:column headerText="Telefone" style="width:110px">
+					<h:outputText value="#{funcionario.pessoa.celular}" />
+				</p:column>
+
+				<p:column headerText="Localização" style="width:200px">
+					<h:outputText value="#{funcionario.pessoa.localidade}" />
+				</p:column>
+
+				<p:column headerText="Opções" style="width:130px">
+					<div class="row">
+						<div class="col-sm-12 col-md-3">
+							<p:commandButton icon="fa fa-fw fa-edit"
+								styleClass="btn-block btn-primary" disabled="false"
+								update=":formDialogo:painel" oncomplete="PF('dialogo').show();"
+								actionListener="#{funcionarioBean.carregar}">
+								<f:attribute name="funcionarioSelecionado"
+									value="#{funcionario}" />
+								<f:actionListener
+									type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+							</p:commandButton>
+						</div>
+						<div class="col-sm-12 col-md-3">
+							<p:commandButton icon="fa fa-fw fa-remove"
+								styleClass="btn-block btn-danger"
+								actionListener="#{funcionarioBean.excluir}"
+								update="@form :formListagem:tabela">
+								<p:confirm header="Confirmação"
+									message="Deseja excluir o funcionario?" icon="ui-icon-alert " />
+								<f:attribute name="funcionarioSelecionado"
+									value="#{funcionario}" />
+								<f:actionListener
+									type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+							</p:commandButton>
+						</div>
+					</div>
+				</p:column>
+			</p:dataTable>
+
+			<p:confirmDialog global="true">
+				<p:commandButton value="Sim" type="button"
+					styleClass="ui-confirmdialog-yes btn-block btn-warning"
+					icon="ui-icon-check" />
+				<p:commandButton value="Não" type="button"
+					styleClass="ui-confirmdialog-no btn-block btn-danger"
+					icon="ui-icon-close" />
+			</p:confirmDialog>
+
+		</h:form>
+
+		<p:dialog header="Cadastro do funcionario" widgetVar="dialogo"
+			responsive="true" draggable="false" resizable="false" modal="true"
+			closable="false">
+
+			<h:form id="formDialogo">
+
+				<p:messages autoUpdate="true" />
+				<p:toolbar style="margin-top: 10px">
+					<p:toolbarGroup>
+						<p:panelGrid columns="2" layout="grid">
+							<p:commandButton value="Salvar"
+								styleClass="btn-block btn-success" icon="ui-icon-check"
+								actionListener="#{funcionarioBean.salvar}" update="@form" />
+
+							<p:commandButton value="Fechar" icon="fa fa-times-circle"
+								actionListener="#{funcionarioBean.inicializar}"
+								styleClass="btn-block btn-warning" update=":formListagem:tabela"
+								oncomplete="PF('dialogo').hide();" />
+						</p:panelGrid>
+					</p:toolbarGroup>
+				</p:toolbar>
+				<h:panelGroup id="funcionarioPainel" layout="block"
+					styleClass="ui-fluid">
+					<p:panelGrid id="painel" columns="1" layout="grid"
+						style="margin-top:20px" styleClass="panelgrid-noborder">
+
+						<p:inputText id="nome" value="#{funcionarioBean.pessoa.nome}"
+							placeholder="Digite o Nome" required="true"
+							requiredMessage="O Campo Nome é obrigatorio" />
+
+						<p:inputText id="apelido"
+							value="#{funcionarioBean.pessoa.apelido}"
+							placeholder="Digite o Apelido" required="true"
+							requiredMessage="O Campo Apelido é obrigatorio" />
+
+						<p:inputText id="localidade" placeholder="Digite a Localização"
+							value="#{funcionarioBean.pessoa.localidade}" required="false"
+							requiredMessage="O Campo Localização obrigatorio" />
+
+						<p:inputMask mask="999999999" id="nuit"
+							value="#{funcionarioBean.pessoa.nuit}"
+							placeholder="Digite o Nuit" />
+
+						<p:inputText id="celular" placeholder="Digite o Nr do Telefone"
+							value="#{funcionarioBean.pessoa.celular}" required="false"
+							requiredMessage="O Campo Celular e obrigatorio" />
+
+						<p:inputText id="email" placeholder="Digite o Email"
+							value="#{funcionarioBean.pessoa.email1}" />
+
+						<h:selectOneMenu value="#{funcionarioBean.empresa}"
+							id="nomeClient" rendered="#{funcionarioBean.componenteEmpresa}"
+							converter="omnifaces.SelectItemsConverter" filter="true">
+
+							<f:selectItems value="#{funcionarioBean.empresas}" var="emp"
+								itemValue="#{emp}" itemLabel="#{emp.nome}" />
+						</h:selectOneMenu>
+
+					</p:panelGrid>
+
+				</h:panelGroup>
+			</h:form>
+
+		</p:dialog>
+
+
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,770 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+
+	<ui:define name="title">
+     Facturas
+    </ui:define>
+	<ui:define name="description">
+      Página dedicada a visualização e operacaoes de Facturas.
+    </ui:define>
+
+	<ui:define name="body">
+		<adm:breadcrumb title="Rel de Vendas" />
+
+		<h:form id="formPesquisa">
+
+			<p:toolbar style="margin-top: 10px"
+				styleClass="box-primary box-solid">
+				<p:toolbarGroup>
+
+					<p:selectOneRadio value="#{facturaBean.pesquisa}"
+						rendered="#{facturaBean.facturaUnica eq false}"
+						style="width: 280px;">
+						<f:selectItem itemLabel="Diario" itemValue="1" />
+						<f:selectItem itemLabel="Entervalo de dias" itemValue="2" />
+						<f:ajax listener="#{facturaBean.adicionarComponentes}"
+							render="formListagem formListagem:tabela formListagem:total" />
+					</p:selectOneRadio>
+
+					<p:commandButton icon="fa fa-mail-reply"
+						rendered="#{facturaBean.facturaUnica}" />
+
+				</p:toolbarGroup>
+			</p:toolbar>
+		</h:form>
+
+		<h:form id="formPesquisaComponentes"
+			rendered="#{facturaBean.facturaUnica eq false}">
+
+
+
+
+		</h:form>
+
+		<h:form id="formListagem">
+
+			<p:panelGrid id="painelComponentes" columns="4" layout="grid"
+				rendered="#{facturaBean.facturaUnica eq false}"
+				style="margin-top:20px" styleClass="panelgrid-noborder"
+				columnClasses="ui-grid-col-2,ui-grid-col-4,
+			ui-grid-col-2, ui-grid-col-4">
+
+				<h:outputLabel value="Dia"
+					rendered="#{facturaBean.dataComponenteLabel}" />
+				<h:outputLabel value="Data Inicio"
+					rendered="#{facturaBean.dataInicioComponente}" />
+				<p:calendar id="dia" navigator="true" effect="fold"
+					rendered="#{facturaBean.dataComponente}"
+					value="#{facturaBean.dataUnico}">
+					<f:ajax listener="#{facturaBean.listar}" event="dateSelect"
+						render="formListagem:tabela formListagem:total formListagem:fim" />
+				</p:calendar>
+
+				<h:outputLabel value="Data Fim"
+					rendered="#{facturaBean.dataFimComponente}" />
+				<p:calendar id="fim" navigator="true" required="false"
+					disabled="#{facturaBean.calendario2}"
+					rendered="#{facturaBean.dataFimComponente}"
+					value="#{facturaBean.dataFim}">
+					<f:ajax listener="#{facturaBean.listar}" event="dateSelect"
+						render="formListagem:tabela formListagem:total" />
+				</p:calendar>
+
+			</p:panelGrid>
+			<div id="datatable">
+
+
+
+				<p:dataTable id="tabela" value="#{facturaBean.facturas}"
+					rendered="#{facturaBean.facturaUnica eq false}"
+					emptyMessage="Nenhuma Venda Efectuada nesta Data"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+					paginator="true" rowsPerPageTemplate="5,10,15" rows="20"
+					style="margin-bottom:20px" var="dinheiro" reflow="true">
+
+					<p:ajax event="rowToggle" listener="#{facturaBean.carregarFactura}"
+						update=":formListagem:tabela:tabelaItem" />
+
+					<p:column style="width:25px">
+						<p:rowToggler />
+					</p:column>
+
+					<p:column headerText="Cod" style="width:100px">
+						<h:outputText value="#{dinheiro.codigoFT}" />
+					</p:column>
+					<p:column headerText="Dta Fact" style="width:100px">
+						<h:outputText value="#{dinheiro.dataFacturacao}" />
+					</p:column>
+					<p:column headerText="Cliente">
+						<h:outputText value="#{dinheiro.venda.cliente.pessoa.nome}" />
+					</p:column>
+
+					<p:column headerText="Subtotal" style="width:100px">
+						<h:outputText value="#{dinheiro.venda.valorSubtotal}" />
+					</p:column>
+
+					<p:column headerText="Iva" style="width:100px">
+						<h:outputText value="#{dinheiro.venda.valorPagoIva}" />
+					</p:column>
+
+					<p:column headerText="Total" style="width:100px">
+						<h:outputText value="#{dinheiro.venda.valorTotal}" />
+					</p:column>
+
+					<p:column headerText="Saldo" style="width:100px">
+						<h:outputText value="#{dinheiro.saldo}" />
+					</p:column>
+
+					<p:column headerText="Funcionario">
+						<h:outputText value="#{dinheiro.venda.funcionario.pessoa.nome} - " />
+						<h:outputText value="#{dinheiro.venda.funcionario.codigo}" />
+					</p:column>
+
+					<p:column headerText="Estado" style="width:80px">
+						<h:outputText value="#{dinheiro.estado}" />
+					</p:column>
+
+					<p:column headerText="Opções">
+
+						<p:commandButton styleClass="btn-info btn-block" value="Operações"
+							icon="fa fa-cogs"
+							actionListener="#{facturaBean.carregarFacturaComRelacionados}"
+							update="@form :formPesquisa :formPesquisaComponentes :formListagem:painelFacturaUnica :formListagem:painelOperacaoesFactura">
+							<f:attribute name="facturaComRelacionadosSelecionada"
+								value="#{dinheiro}" />
+							<f:actionListener
+								type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+						</p:commandButton>
+
+
+					</p:column>
+
+					<p:rowExpansion>
+						<p:dataTable reflow="true" id="tabelaItem"
+							value="#{facturaBean.itemsVendas}" var="itemsVenda">
+							<p:column headerText="Produto">
+								<h:outputText value="#{itemsVenda.produto.descricao}" />
+							</p:column>
+							<p:column headerText="Qtd">
+								<h:outputText value="#{itemsVenda.quantidade}" />
+							</p:column>
+							<p:column headerText="Valor Parcial">
+								<h:outputText value="#{itemsVenda.valorParcial}" />
+							</p:column>
+						</p:dataTable>
+					</p:rowExpansion>
+
+				</p:dataTable>
+			</div>
+			<div class="ui-fluid">
+				<div class="ui-g">
+					<div class="ui-g-12 ui-md-6 ui-lg-9">
+
+						<div class="ui-g-12 ui-md-6 ui-lg-12">
+							<p:panel
+								header="Factura n: #{facturaBean.factura.codigoFT}  #{facturaBean.factura.estado} "
+								id="painelFacturaUnica" rendered="#{facturaBean.facturaUnica}">
+
+								<p:panelGrid columns="4" layout="grid"
+									style="balckgroud-color:red"
+									columnClasses="ui-grid-col-2, ui-grid-col-12">
+									<p:outputLabel value="Empresa: " />
+									<p:outputLabel
+										value="#{facturaBean.usuario.funcionario.pessoa.empresa.nome}" />
+
+									<p:outputLabel value="Cliente: " />
+									<p:outputLabel
+										value="#{facturaBean.usuario.funcionario.pessoa.empresa.nome}" />
+
+									<p:outputLabel value="Email: " />
+									<p:outputLabel
+										value="#{facturaBean.usuario.funcionario.pessoa.empresa.email}" />
+
+									<p:outputLabel value="Morada: " />
+									<p:outputLabel
+										value="#{facturaBean.usuario.funcionario.pessoa.empresa.morada}" />
+
+									<p:outputLabel value="Nuit: " />
+									<p:outputLabel
+										value="#{facturaBean.usuario.funcionario.pessoa.empresa.nuit}" />
+
+									<p:outputLabel />
+									<p:outputLabel />
+								</p:panelGrid>
+
+							</p:panel>
+						</div>
+
+						<div class="ui-g-12 ui-md-6 ui-lg-12">
+
+							<p:panel id="painelFacturaUnica2"
+								rendered="#{facturaBean.facturaUnica}">
+
+								<p:panelGrid layout="grid" styleClass="panelgrid-noborder"
+									columns="2" columnClasses="ui-grid-col-3, ui-grid-col-8">
+									<p:outputLabel value="Nr da Factura:" />
+									<p:inputText maxlength="50" style="width:100px"
+										value="#{facturaBean.factura.codigoFT}" readonly="true" />
+
+									<p:outputLabel value="Observacao:" />
+									<p:inputTextarea readonly="true" id="facturaObservacao"
+										rows="1" cols="33" value="#{facturaBean.factura.obseracoes}" />
+								</p:panelGrid>
+
+								<p:dataTable reflow="true" id="tabelaItem5"
+									value="#{facturaBean.itemsVendas}" var="itemsVenda">
+
+									<p:column headerText="Produto">
+										<h:outputLabel value="#{itemsVenda.produto.descricao}" />
+									</p:column>
+
+									<p:column headerText="Qtd">
+										<p:outputLabel value="#{itemsVenda.quantidade}" />
+									</p:column>
+
+									<p:column headerText="Valor Unitario">
+										<p:outputLabel value="#{itemsVenda.valorUnitario}" />
+									</p:column>
+
+									<p:column headerText="valor Parcial">
+										<p:outputLabel value="#{itemsVenda.valorParcial}" />
+									</p:column>
+
+								</p:dataTable>
+								<br />
+								<p:inputText maxlength="50" style="width:150px"
+									value="Total: #{facturaBean.factura.venda.valorTotal} MT"
+									readonly="true" />
+
+								<p:inputText maxlength="50" style="width:250px"
+									value="Sub-Total: #{facturaBean.factura.venda.valorSubtotal} MT"
+									readonly="true" />
+
+								<p:inputText maxlength="50" style="width:150px"
+									value="Iva: #{facturaBean.factura.venda.valorPagoIva} MT"
+									readonly="true" />
+							</p:panel>
+						</div>
+
+					</div>
+					<div class="ui-g-12 ui-md-6 ui-lg-3" style="text-align: center">
+						<p:panel id="painelOperacaoesFactura"
+							rendered="#{facturaBean.facturaUnica}">
+							<p:commandButton value="Imprimir"
+								styleClass="btn-block btn-success"
+								actionListener="#{facturaBean.imprimirFactura}" ajax="false"
+								onclick="this.form.target='_blank'" immediate="true" />
+
+							<p:commandButton value="Pagamento/Recibo"
+								styleClass="btn-block btn-info"
+								actionListener="#{facturaBean.carregarFactura}"
+								update=":formDialogo:painel"
+								oncomplete="PF('dialogoPagamento').show();" />
+
+							<p:commandButton styleClass="btn-block btn-warning"
+								value="
+								Cancelar"
+								update=":formDialogoCanc:cancelarPainel2"
+								oncomplete="PF('itemDialogoCancelar').show();" />
+
+							<p:outputLabel value="Acertos" />
+
+							<p:commandButton value="Nota de débito"
+								styleClass="btn-block btn-danger btn-xs"
+								actionListener="#{facturaBean.carregarFactura}"
+								update=":formDialogo:painelNotaDeDebido :formDialogo:tabelaItem4"
+								oncomplete="PF('dialogoNotaDeDebido').show();" />
+
+							<p:commandButton value="Nota de crédito"
+								styleClass="btn-block btn-danger btn-xs"
+								actionListener="#{facturaBean.carregarFactura}"
+								update=":formDialogo:painelCancelar :formDialogo:tabelaItem3"
+								oncomplete="PF('dialogoCancelar').show();" />
+
+							<p:outputLabel value="Saldo" />
+							<h:outputText value="#{facturaBean.factura.saldo}" />
+
+
+							<p:outputLabel value="Documentos Relacionados" />
+
+							<p:dataTable value="#{facturaBean.notaDeCreditos}"
+								var="documento" reflow="true"
+								emptyMessage="Factura Sem Nota De Credito">
+								<p:column headerText="Nota De Credito" style="width:50px">
+
+									<p:commandLink value="#{documento.codigo}">
+
+									</p:commandLink>
+								</p:column>
+
+								<p:column headerText="Total" style="width:50px">
+									<p:commandLink value="#{documento.valorTotal}">
+
+									</p:commandLink>
+								</p:column>
+							</p:dataTable>
+
+							<p:dataTable value="#{facturaBean.notaDeDebidos}" var="documento"
+								reflow="true" emptyMessage="Factura Sem Nota de Debido">
+
+								<p:column headerText="Nota De Debido" style="width:50px">
+									<p:commandButton value="#{documento.codigo}"
+										actionListener="#{facturaBean.carregarND}"
+										oncomplete="PF('ndDialogo').show()" immediate="true"
+										update=":formND">
+										<f:attribute name="ndSelecionado" value="#{documento}" />
+										<f:actionListener
+											type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+									</p:commandButton>
+
+								</p:column>
+
+								<p:column headerText="Total" style="width:50px">
+									<p:commandLink value="#{documento.valorTotal}">
+
+									</p:commandLink>
+								</p:column>
+							</p:dataTable>
+
+							<p:dataTable value="#{facturaBean.recibos}" var="documento"
+								reflow="true" emptyMessage="Factura Sem Recibos">
+								<p:column headerText="Recibo" style="width:50px">
+									<p:commandLink value="#{documento.codigo}"
+										actionListener="#{facturaBean.carregarRecibo}">
+										<f:attribute name="reciboSelecionado" value="#{documento}" />
+										<f:actionListener
+											type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+									</p:commandLink>
+								</p:column>
+
+								<p:column headerText="Total" style="width:50px">
+									<p:commandLink value="#{documento.valorTotal}"
+										actionListener="#{facturaBean.carregarRecibo}"
+										oncomplete="PF('reciboDialogo').show()"
+										update=":formRecibo:painelRecibo">
+										<f:attribute name="reciboSelecionado" value="#{documento}"
+											actionListener="#{facturaBean.recibo}" />
+										<f:actionListener
+											type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+									</p:commandLink>
+								</p:column>
+							</p:dataTable>
+
+						</p:panel>
+					</div>
+				</div>
+
+			</div>
+
+		</h:form>
+
+		<p:dialog header="Cancelar Factura" widgetVar="itemDialogoCancelar"
+			modal="true" showEffect="fade" hideEffect="fade" resizable="false"
+			draggable="false" closable="true" responsive="true">
+			<h:form id="formDialogoCanc">
+				<h:panelGrid id="cancelarPainel2" layout="block"
+					styleClass="ui-fluid">
+
+					<p:commandButton value="Validar" id="btnCancelar"
+						actionListener="#{facturaBean.cancelarFactura}"
+						styleClass="btn-block btn-success" icon="ui-icon-check"
+						update="@form :formPesquisa :formPesquisaComponentes 
+								:formListagem:painelFacturaUnica :formListagem:painelOperacaoesFactura" />
+					<p:outputLabel value="Motivo:" />
+					<p:inputTextarea id="motivo" rows="1" cols="33"
+						value="#{facturaBean.factura.obseracoes}" />
+
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+		<h:form id="formDialogo">
+
+			<!-- dialogos -->
+			<p:dialog header="Guia de Remessa" widgetVar="itemDialogo"
+				modal="true" showEffect="fade" hideEffect="fade" resizable="false"
+				draggable="false" closable="true" responsive="true"
+				style="width:300px" width="700px">
+
+				<h:panelGroup id="categoriaPainel" layout="block"
+					styleClass="ui-fluid">
+					<div class="col-sm-12 col-md-3">
+						<p:commandButton value="Emitir" id="withIcon"
+							actionListener="#{facturaBean.salvarGuia}" icon="fa fa-floppy-o"
+							styleClass="btn-danger btn-block" ajax="false"
+							onclick="this.form.target='_blank' " />
+					</div>
+					<p:dataTable reflow="true" id="tabelaItem2"
+						value="#{facturaBean.itemsVendas}" var="itemsVenda">
+						<p:column headerText="Produto">
+							<h:outputText value="#{itemsVenda.produto.descricao}" />
+						</p:column>
+					</p:dataTable>
+				</h:panelGroup>
+
+			</p:dialog>
+
+			<!-- Nota de Credito -->
+			<p:dialog header="Nota de Credito" widgetVar="dialogoCancelar"
+				modal="true" showEffect="fade" hideEffect="fade" resizable="false"
+				draggable="false" closable="true" responsive="true"
+				style="max-width:900px">
+
+				<p:messages id="messages" showDetail="true" autoUpdate="true"
+					closable="true" />
+				<h:panelGroup id="cancelarPainel" layout="block"
+					styleClass="ui-fluid">
+
+					<div class="col-sm-12 col-md-3">
+
+						<p:commandButton value="Validar" id="validar"
+							actionListener="#{facturaBean.salvarNotaDeCredito}"
+							icon="fa fa-floppy-o" styleClass="btn-danger btn-block"
+							update="@form :formPesquisa :formPesquisaComponentes 
+								:formListagem:painelFacturaUnica :formListagem:painelOperacaoesFactura"
+							oncomplete="PF('dialogoCancelar').hide()" immediate="true" />
+					</div>
+
+					<p:panelGrid layout="grid" styleClass="panelgrid-noborder"
+						id="painelCancelar" columns="2"
+						columnClasses="ui-grid-col-3, ui-grid-col-8">
+						<p:outputLabel value="Nr da Factura:" />
+						<p:inputText maxlength="50" size="50"
+							value="#{facturaBean.factura.codigoFT}" readonly="true" />
+
+						<p:outputLabel value="Motivo:" />
+						<p:inputTextarea id="servico" rows="1" cols="33"
+							value="#{facturaBean.factura.obseracoes}" />
+
+					</p:panelGrid>
+				</h:panelGroup>
+
+
+				<p:outputLabel />
+				<p:dataTable reflow="true" id="tabelaItem3"
+					disabledTextSelection="#{facturaBean.parcialTotal}"
+					selection="#{facturaBean.itemsVendasCheckbox}"
+					value="#{facturaBean.itemsVendas}" var="itemsVenda"
+					rowKey="#{itemsVenda.codigo}" editable="true" editMode="cell">
+					<f:facet name="header">
+                               Selecione os produtos/Servicos
+                            </f:facet>
+					<p:ajax event="cellEdit"
+						listener="#{facturaBean.controloNotaDeCredito}"
+						update=":formDialogo:tabelaItem3 formDialogo:messages" />
+
+					<p:column selectionMode="multiple"
+						style="width:50px;text-align:center" />
+					<p:column headerText="Produto">
+						<h:outputText value="#{itemsVenda.produto.descricao}" />
+					</p:column>
+					<p:column headerText="Qtd Factura">
+						<h:outputText value="#{itemsVenda.quantidade}" />
+					</p:column>
+
+					<p:column headerText="Qtd Por Cancelar">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{itemsVenda.quantidadeCancelada}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="#{itemsVenda.quantidadeCancelada}" />
+							</f:facet>
+						</p:cellEditor>
+
+					</p:column>
+
+					<p:column headerText="valor Parcial">
+						<h:outputText value="#{itemsVenda.valorParcial}" />
+					</p:column>
+
+
+					<f:facet name="footer">
+					</f:facet>
+
+
+				</p:dataTable>
+
+				<p:dialog header="Confirmacao" widgetVar="notaDialogo" modal="true"
+					showEffect="fade" hideEffect="fade" resizable="false" width="220"
+					closable="true">
+
+					<p:commandButton process="tabelaItem3" value="Fechar"
+						oncomplete="PF('notaDialogo').hide()" />
+				</p:dialog>
+			</p:dialog>
+
+			<!-- Fim Cancelar Factura -->
+
+
+			<!-- Nota de Debido -->
+			<p:dialog header="Nota de Debido" widgetVar="dialogoNotaDeDebido"
+				modal="true" showEffect="fade" hideEffect="fade" resizable="false"
+				draggable="false" closable="true" responsive="true"
+				style="max-width:900px">
+
+				<p:messages id="messages1" showDetail="true" autoUpdate="true"
+					closable="true" />
+				<h:panelGroup id="notaDeDebidoPainel" layout="block"
+					styleClass="ui-fluid">
+
+					<div class="col-sm-12 col-md-3">
+						<p:commandButton value="Salvar Nota de Debido" id="sDebido"
+							actionListener="#{facturaBean.salvarNotaDeDebido}"
+							update="@form :formPesquisa :formPesquisaComponentes 
+								:formListagem:painelFacturaUnica :formListagem:painelOperacaoesFactura"
+							oncomplete="PF('dialogoNotaDeDebido').hide()"
+							icon="fa fa-floppy-o" styleClass="btn-danger btn-block" />
+					</div>
+
+					<p:panelGrid layout="grid" styleClass="panelgrid-noborder"
+						id="painelNotaDeDebido" columns="2"
+						columnClasses="ui-grid-col-3, ui-grid-col-8">
+						<p:outputLabel value="Nr da Factura:" />
+						<p:inputText maxlength="50" size="50"
+							value="#{facturaBean.factura.codigoFT}" readonly="true" />
+
+						<p:outputLabel value="Motivo:" />
+						<p:inputTextarea id="observacaoNotaDedebido" rows="1" cols="33"
+							value="#{facturaBean.notaDeDebido.obseracoes}" />
+
+					</p:panelGrid>
+				</h:panelGroup>
+
+				<p:outputLabel />
+				<p:dataTable reflow="true" id="tabelaItem4"
+					disabledTextSelection="#{facturaBean.parcialTotal}"
+					selection="#{facturaBean.itemsVendasDebido}"
+					value="#{facturaBean.itemsVendas}" var="itemsVenda"
+					rowKey="#{itemsVenda.codigo}" editable="true" editMode="cell">
+					<f:facet name="header">Selecione os produtos/Servicos</f:facet>
+
+					<p:ajax event="cellEdit"
+						listener="#{facturaBean.controloNotaDeDebido}"
+						update=":formDialogo:tabelaItem4 formDialogo:messages1" />
+
+					<p:column selectionMode="multiple"
+						style="width:50px;text-align:center" />
+					<p:column headerText="Produto">
+						<h:outputText value="#{itemsVenda.produto.descricao}" />
+					</p:column>
+
+					<p:column headerText="Qtd">
+
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{itemsVenda.quantidade}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="#{itemsVenda.quantidade}" />
+							</f:facet>
+						</p:cellEditor>
+
+					</p:column>
+
+					<p:column headerText="valor Parcial">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{itemsVenda.valorParcial}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="#{itemsVenda.valorParcial}" />
+							</f:facet>
+						</p:cellEditor>
+
+					</p:column>
+
+					<f:facet name="footer">
+					</f:facet>
+
+				</p:dataTable>
+
+				<p:dialog header="Confirmacao" widgetVar="notaDialogo" modal="true"
+					showEffect="fade" hideEffect="fade" resizable="false" width="220"
+					closable="true">
+
+					<p:commandButton process="tabelaItem4"
+						value="Imprimir Nota de Credito" id="notaDebido"
+						action="#{facturaBean.salvarNotaDeDebido()}" icon="fa fa-floppy-o"
+						styleClass="btn-danger btn-block" ajax="false"
+						onclick="this.form.target='_blank' " update=":formListagem:tabela"
+						oncomplete="PF('notaDialogo').hide()" immediate="true" />
+
+
+					<p:commandButton process="tabelaItem3" value="Fechar"
+						oncomplete="PF('notaDialogo').hide()" />
+				</p:dialog>
+			</p:dialog>
+
+
+			<!-- Fim Nota de Debido -->
+
+			<!-- Pagar Factura Emitir Recibo-->
+
+			<p:dialog header="Pagamento da Factura" widgetVar="dialogoPagamento"
+				styleClass="box-primary" modal="true">
+
+
+				<p:panelGrid layout="grid" styleClass="ui-panelgrid-blank"
+					id="painel" columns="2"
+					columnClasses="ui-grid-col-3, ui-grid-col-8">
+					<p:outputLabel value="Nr da Factura:" />
+					<p:inputText value="#{facturaBean.factura.codigoFT}"
+						readonly="true" />
+
+					<p:outputLabel value="Valor Por Pagar:" />
+					<p:outputLabel value="#{facturaBean.factura.saldo}" />
+
+					<p:outputLabel value="Valor Pago:" />
+					<p:inputText value="#{facturaBean.valorTotalRecibo}" />
+
+					<p:outputLabel for="tpagamento" value="Tipo de Pagamento" />
+					<p:selectOneButton id="tpagamento"
+						converter="omnifaces.SelectItemsConverter"
+						value="#{facturaBean.tipoPagamento}">
+						<f:selectItem itemValue="Vista" itemLabel="Vista"
+							itemEscaped="true" />
+						<f:selectItem itemValue="Check" itemLabel="Check" />
+						<f:selectItem itemValue="Cartão" itemLabel="Cartão" />
+					</p:selectOneButton>
+
+
+					<p:outputLabel value="Nr do Check:" />
+					<p:inputText placeholder="Nº do Check" id="check" disabled="false"
+						value="#{facturaBean.detalhePagamento}" />
+
+
+				</p:panelGrid>
+
+				<h:panelGrid layout="grid" styleClass="panelgrid-noborder"
+					columns="1">
+
+					<p:commandButton value="Salvar" styleClass="btn-block btn-success"
+						icon="ui-icon-check" onclick="PF('dlgPrimary').show();"
+						actionListener="#{facturaBean.pagarFactura}">
+					</p:commandButton>
+
+				</h:panelGrid>
+
+			</p:dialog>
+
+			<p:dialog header="Imprimir" styleClass="box-primary"
+				widgetVar="dlgPrimary" minHeight="100" modal="true">
+				<p:commandButton id="imprimirOriginal"
+					columnClasses="ui-grid-col-4,ui-grid-col-4"
+					action="#{facturaBean.imprimir}" ajax="false" value="Original"
+					icon="ui-icon-print" immediate="true" />
+				<p:commandButton id="imprimirVerso"
+					columnClasses="ui-grid-col-4,ui-grid-col-4"
+					action="#{facturaBean.imprimir2}" ajax="false" value="Verso"
+					icon="ui-icon-print" immediate="true" />
+
+				<p:commandButton id="btnFecha" value="Fechar"
+					onclick="PF('dialogoPagamento').hide()" icon="fa fa-times-circle"
+					oncomplete="PF('dlgPrimary').hide();"
+					update="@form :formPesquisa :formPesquisaComponentes 
+								:formListagem:painelFacturaUnica :formListagem:painelOperacaoesFactura" />
+			</p:dialog>
+
+			<!-- Fim dialogos -->
+		</h:form>
+
+
+
+		<h:form id="formRecibo">
+			<p:dialog header="Confirmacao" widgetVar="reciboDialogo" modal="true"
+				showEffect="fade" hideEffect="fade" resizable="false"
+				maximizable="true" closable="true">
+				<div class="ui-g">
+					<div class="ui-g-12 ui-md-6 ui-lg-9">
+
+						<p:panel id="painelRecibo"
+							header="Recibo n: #{facturaBean.recibo.codigo}">
+
+							<p:panelGrid columns="1" layout="grid"
+								style="balckgroud-color:red" columnClasses="ui-grid-col-12">
+								<p:outputLabel value="Estado: #{facturaBean.recibo.estado}" />
+								<p:outputLabel value="Motivo: " />
+								<p:inputText value="#{facturaBean.recibo.observacoes}" />
+
+								<p:outputLabel />
+								<p:outputLabel />
+							</p:panelGrid>
+
+						</p:panel>
+					</div>
+
+					<div class="ui-g-12 ui-md-6 ui-lg-3" style="text-align: center">
+						<p:panel>
+							<p:commandButton value="Cancelar"
+								actionListener="#{facturaBean.cancelarRecibo}" />
+
+							<p:outputLabel value="Acertos" />
+
+						</p:panel>
+					</div>
+
+				</div>
+
+			</p:dialog>
+		</h:form>
+
+		<h:form id="formND">
+			<p:dialog header="ND" widgetVar="ndDialogo" modal="true"
+				showEffect="fade" hideEffect="fade" resizable="false"
+				maximizable="true" closable="true">
+				<div class="ui-g">
+					<div class="ui-g-12 ui-md-6 ui-lg-9">
+
+						<p:panel header="NC n: #{facturaBean.notaDeDebido.factura.codigo}">
+
+							<p:panelGrid columns="4" layout="grid"
+								style="balckgroud-color:red"
+								columnClasses="ui-grid-col-2, ui-grid-col-12">
+								<p:outputLabel value="Empresa: " />
+								<p:outputLabel
+									value="#{facturaBean.usuario.funcionario.pessoa.empresa.nome}" />
+								<p:outputLabel value="Cliente: " />
+								<p:outputLabel
+									value="#{facturaBean.notaDeDebido.factura.codigo}" />
+
+								<p:outputLabel value="Email: " />
+								<p:outputLabel
+									value="#{facturaBean.usuario.funcionario.pessoa.empresa.email}" />
+
+								<p:outputLabel value="Morada: " />
+								<p:outputLabel
+									value="#{facturaBean.usuario.funcionario.pessoa.empresa.morada}" />
+
+								<p:outputLabel value="Nuit: " />
+								<p:outputLabel
+									value="#{facturaBean.usuario.funcionario.pessoa.empresa.nuit}" />
+
+								<p:outputLabel />
+								<p:outputLabel />
+							</p:panelGrid>
+
+						</p:panel>
+					</div>
+
+					<div class="ui-g-12 ui-md-6 ui-lg-3" style="text-align: center">
+						<p:panel>
+							<p:commandButton value="Cancelar" />
+
+							<p:outputLabel value="Acertos" />
+
+						</p:panel>
+					</div>
+
+				</div>
+
+			</p:dialog>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

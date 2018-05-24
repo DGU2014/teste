@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+
+	<ul class="sidebar-menu">
+
+		<p:ajaxStatus onstart="PF('statusDialog').show()"
+			onsuccess="PF('statusDialog').hide()" />
+
+		<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+			closable="false" resizable="false" showHeader="false">
+			<p:graphicImage name="/images/gif-load.gif" />
+			<h2>Aguarde...</h2>
+		</p:dialog>
+		
+		<li><p:link href="/index.xhtml">
+				<i class="fa fa-home"></i>
+				<span>Home</span>
+			</p:link></li>
+		<li><p:link href="#" rendered="false" target="_blank">
+				<i class="fa fa-book"></i>
+				<span>Documentação</span>
+			</p:link></li>
+		<li class="header">Geral</li>
+		<li><p:link href="/pages/pessoa/Cliente.xhtml">
+				<i class="fa fa-user-plus"></i>
+				<span>Cliente</span>
+			</p:link></li>
+		<li><p:link href="/pages/pessoa/Fornecedor.xhtml" rendered="#{autenticacaoBean.temPermissoes(['A'])}">
+				<i class="fa fa-user-plus"></i>
+				<span>Fornecedor</span>
+			</p:link></li>
+		<li><p:link href="/pages/pessoa/Funcionario.xhtml" rendered="#{autenticacaoBean.temPermissoes(['A'])}">
+				<i class="fa fa-user-plus"></i>
+				<span>Funcionario</span>
+			</p:link></li>
+
+		<li><p:link href="/pages/venda/Venda.xhtml">
+				<i class="fa  fa-fw fa-opencart"></i>
+				<span>Venda</span>
+			</p:link></li>
+
+
+		<li class="treeview"><a href="#"> <i
+				class="fa  fa-fw  fa-suitcase"></i> <span>Stock</span> <span
+				class="pull-right-container"> <i
+					class="fa fa-angle-left pull-right"></i>
+			</span>
+		</a>
+			<ul class="treeview-menu">
+
+				<li><p:link href="/pages/stock/Categoria.xhtml" process="@form" update="@form" 
+				rendered="#{autenticacaoBean.temPermissoes(['A'])}">
+						<i class="fa  fa-fw fa-server"></i>
+						<span>Categoria</span>
+					</p:link></li>
+
+				<li><p:link href="/pages/stock/Produto.xhtml"
+				rendered="#{autenticacaoBean.temPermissoes(['A'])}">
+						<i class="fa  fa-fw fa-archive"></i>
+						<span>Produto</span>
+					</p:link></li>
+
+				<li><p:link href="/pages/stock/Armazen.xhtml"
+				rendered="#{autenticacaoBean.temPermissoes(['A'])}">
+						<i class="fa  fa-fw fa-cubes"></i>
+						<span>Armazem</span>
+					</p:link></li>
+
+				<li><p:link href="/pages/stock/Loja.xhtml">
+						<i class="fa  fa-fw fa-desktop"></i>
+						<span>Loja</span>
+					</p:link></li>
+				<li><p:link href="/pages/stock/Compra.xhtml"
+				rendered="#{autenticacaoBean.temPermissoes(['A'])}">
+						<i class="fa  fa-fw fa-shopping-cart"></i>
+						<span>Compra</span>
+					</p:link></li>
+			</ul></li>
+
+		<li class="treeview"><a href="#" > <i
+				class="fa  fa-fw  fa-file-text"></i> <span>Relatorios</span> <span
+				class="pull-right-container"> <i
+					class="fa fa-angle-left pull-right"></i>
+			</span>
+		</a>
+			<ul class="treeview-menu">
+
+				<li><p:link rendered="#{autenticacaoBean.temPermissoes(['A'])}"
+						href="/pages/relatorio/RelatorioDeVendaDiaria.xhtml">
+						<i class="fa  fa-fw  fa-file-text"></i>
+						<span>Vendas de Hoje</span>
+					</p:link></li>
+
+				<li><p:link href="/pages/relatorio/RelatorioDeVenda.xhtml"
+				rendered="#{autenticacaoBean.temPermissoes(['A'])}">
+						<i class="fa  fa-fw  fa-file-text"></i>
+						<span>Vendas</span>
+					</p:link></li>
+
+				<li><p:link href="/pages/relatorio/RelatorioDeCompra.xhtml"
+				rendered="#{autenticacaoBean.temPermissoes(['A'])}">
+						<i class="fa  fa-fw  fa-file-text"></i>
+						<span>Compras</span>
+					</p:link></li>
+
+			</ul></li>
+		<li class="treeview"><a href="#"><i
+				class="fa  fa-fw fa-opencart"></i> <span>COMERCIAL</span> <span
+				class="pull-right-container"> <i
+					class="fa fa-angle-left pull-right"></i>
+			</span> </a>
+			<ul class="treeview-menu">
+
+				<li><p:link href="/pages/comercial/VD.xhtml" rendered="true">
+						<i class="fa  fa-fw  fa-file-text"></i>
+						<span>VD</span>
+					</p:link></li>
+				<li><p:link href="/pages/comercial/Factura.xhtml">
+						<i class="fa  fa-fw  fa-file-text"></i>
+						<span>Factura</span>
+					</p:link></li>
+				<li><p:link href="/pages/comercial/Cotacao.xhtml"
+						rendered="true">
+						<i class="fa  fa-fw  fa-file-text"></i>
+						<span>Cotação</span>
+					</p:link></li>
+				<li><p:link href="/pages/comercial/Recibo.xhtml"
+						rendered="true">
+						<i class="fa  fa-fw  fa-file-text"></i>
+						<span>Recibo</span>
+					</p:link></li>
+				<li><p:link href="/pages/comercial/nc.xhtml" rendered="true">
+						<i class="fa  fa-fw  fa-file-text"></i>
+						<span>N.Credito</span>
+					</p:link></li>
+				<li><p:link href="/pages/comercial/nd.xhtml" rendered="true">
+						<i class="fa  fa-fw  fa-file-text"></i>
+						<span>N.Debido</span>
+					</p:link></li>
+				<li><p:link href="/pages/comercial/VD.xhtml" rendered="false">
+						<i class="fa  fa-fw  fa-file-text"></i>
+						<span>Guia de Entrega</span>
+					</p:link></li>
+			</ul></li>
+
+		<li class="header">Administração</li>
+		<li><p:link href="/pages/config/Empresa.xhtml" rendered="#{autenticacaoBean.temPermissoes(['A'])}">
+				<i class="fa fa-fw  fa-bank"></i>
+				<span>Empresa</span>
+			</p:link></li>
+		<li><p:link href="/pages/config/Usuario.xhtml" rendered="#{autenticacaoBean.temPermissoes(['A'])}">
+				<i class="fa fa-fw  fa-users"></i>
+				<span>Utilizador</span>
+			</p:link></li>
+		<li><p:link href="/pages/config/Historico.xhtml" rendered="#{autenticacaoBean.temPermissoes(['A'])}">
+				<i class="fa fa-fw fa-history"></i>
+				<span>Historico</span>
+			</p:link></li>
+		<li><p:link href="#">
+				<i class="fa fa-fw fa-info"></i>
+				<span>Ajuda</span>
+			</p:link></li>
+	</ul>
+
+
+</ui:composition>

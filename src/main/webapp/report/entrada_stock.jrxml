@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relatorio_recibo" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2d14f459-9e39-4c09-ad0d-4f00198925e8">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[select *from entrada,pecas where pecas.id_peca=entrada.id_peca order by hora_entrada asc;]]>
+	</queryString>
+	<field name="id_e" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="id_peca" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="quantidade_entrada" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hora_entrada" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="quant_a" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="total_ent" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="descricao_peca" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="quantidade_peca" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="valor_aquisicao" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="obs_peca" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hora_pro" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="74" splitType="Stretch">
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement uuid="4774f310-3bde-44a6-9d53-06393054862c" x="480" y="0" width="72" height="14" forecolor="#FF0033"/>
+				<textElement>
+					<font size="8" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="e11028d3-9e42-437c-95c6-c1e64e1056eb" x="3" y="53" width="317" height="20" forecolor="#FF3300"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Lista de Peças  que derem entrada no Stock]]></text>
+			</staticText>
+			<image>
+				<reportElement uuid="1a24a358-eb2e-44b4-a395-6ba51ff57ebf" x="0" y="14" width="75" height="35"/>
+				<imageExpression><![CDATA["C:\\wamp\\www\\Oficina\\pf\\Redit12.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="35" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="5426288f-c3f8-4246-8775-5f62d14013c7" x="0" y="19" width="112" height="16" forecolor="#FFFFFF" backcolor="#FF0000"/>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="d2464a64-5948-480e-981c-86d9620225b2" x="112" y="19" width="278" height="16" forecolor="#FFFFFF" backcolor="#FF0000"/>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="23f3ebce-aa2b-45a2-9527-0c87fb3a98d0" x="390" y="19" width="70" height="16" forecolor="#FFFFFF" backcolor="#FF0000"/>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="8fcd9180-79fa-4db5-80de-b3c9fe0238d2" x="458" y="19" width="94" height="16" forecolor="#FFFFFF" backcolor="#FF0000"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="3fa59f00-6040-4e72-99f1-1062a6e12bd1" x="5" y="21" width="72" height="14" forecolor="#FFFFFF"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Referência]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="92f76f9b-ade8-4726-865c-cbc34496d64f" x="117" y="21" width="235" height="14" forecolor="#FFFFFF"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Designação ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b5518816-a4b3-496a-8500-85fa7aac6473" x="393" y="19" width="65" height="14" forecolor="#FFFFFF"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Qauntidade]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ae6fd2e8-386a-4869-b773-92d072068f6b" x="462" y="19" width="65" height="14" forecolor="#FFFFFF"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data/Hora]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="923f53b2-6d10-4e0c-a052-5656c1eaf45e" x="458" y="0" width="94" height="16"/>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="08392a14-0834-41ae-9815-0af54622d4e5" x="0" y="0" width="112" height="16"/>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="1411e447-b3da-46ac-8cfe-7ba36a54087e" x="390" y="0" width="68" height="16"/>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="b57f17c8-b0f6-497a-87a7-72f831b58046" x="112" y="0" width="278" height="16"/>
+			</rectangle>
+			<textField>
+				<reportElement uuid="c049e95f-78a1-4bfa-b64f-41ab89f9a1d4" x="5" y="1" width="107" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{id_peca}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="75b330f1-e337-4f5c-ae15-b58154afbed7" x="395" y="2" width="65" height="14"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{quantidade_entrada}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c6b9163b-a33d-455c-80f9-2a6e11d6a44a" x="117" y="2" width="273" height="14"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{descricao_peca}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="19b51625-fa76-491b-a2c9-65b28377fc15" x="462" y="2" width="92" height="14"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{hora_entrada}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="29" splitType="Stretch">
+			<line>
+				<reportElement uuid="6e24634b-1ec8-4536-b7f3-49db94e3749c" x="0" y="6" width="552" height="1" forecolor="#FF3333"/>
+			</line>
+			<staticText>
+				<reportElement uuid="55d3f223-0c19-43ed-8a16-5fca5d106efc" x="3" y="10" width="410" height="16" forecolor="#FF0033"/>
+				<textElement/>
+				<text><![CDATA[Licença da MSS/s0000m90s/20m Versão  1.0.01/2015]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

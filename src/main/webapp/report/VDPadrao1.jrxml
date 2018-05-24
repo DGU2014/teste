@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="VD" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryNewPage="true" uuid="6a668267-9b29-4fc2-8298-06016c2270df">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ubi"/>
+	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="297"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="692"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="690"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="296"/>
+	<parameter name="CODIGO_VENDA" class="java.lang.Long"/>
+	<queryString>
+		<![CDATA[SELECT ubisse_ubi_v1.venda.valor_pago_iva,
+	ubisse_ubi_v1.venda.percentagem_desconto,
+	ubisse_ubi_v1.venda.valor_subtotal,
+	ubisse_ubi_v1.venda.`valorTotal`,
+	ubisse_ubi_v1.items_venda.valor_parcial,
+	ubisse_ubi_v1.items_venda.quantidade,
+	ubisse_ubi_v1.venda.codigo,
+	ubisse_ubi_v1.produto.preco,
+	ubisse_ubi_v1.produto.nome,
+	ubisse_ubi_v1.produto.referencia,
+	ubisse_ubi_v1.pessoa.nome AS pessoa_nome,
+	ubisse_ubi_v1.pessoa.nuit,
+	ubisse_ubi_v1.venda.horario,
+	ubisse_ubi_v1.venda_dinheiro.codigo AS vd_codigo,
+	ubisse_ubi_v1.produto.descricao,
+    ubisse_ubi_v1.pessoa.celular ,
+    ubisse_ubi_v1.pessoa.localidade, 
+	(SELECT ubisse_ubi_v1.pessoa.nome
+FROM ubisse_ubi_v1.venda
+	INNER JOIN ubisse_ubi_v1.funcionario ON 
+	 ubisse_ubi_v1.venda.funcionario_codigo = ubisse_ubi_v1.funcionario.codigo 
+	INNER JOIN ubisse_ubi_v1.pessoa ON 
+	 ubisse_ubi_v1.funcionario.pessoa_codigo = ubisse_ubi_v1.pessoa.codigo 
+WHERE 
+	 ubisse_ubi_v1.venda.codigo = $P{CODIGO_VENDA} ) "nome_funcionario",
+	(SELECT ubisse_ubi_v1.pessoa.apelido
+FROM ubisse_ubi_v1.venda
+	INNER JOIN ubisse_ubi_v1.funcionario ON 
+	 ubisse_ubi_v1.venda.funcionario_codigo = ubisse_ubi_v1.funcionario.codigo 
+	INNER JOIN ubisse_ubi_v1.pessoa ON 
+	 ubisse_ubi_v1.funcionario.pessoa_codigo = ubisse_ubi_v1.pessoa.codigo 
+WHERE 
+	 ubisse_ubi_v1.venda.codigo = $P{CODIGO_VENDA} ) "apelido_funcionario",
+	(SELECT SUBSTR(  ubisse_ubi_v1.pessoa.apelido ,1,1)
+FROM ubisse_ubi_v1.venda
+	INNER JOIN ubisse_ubi_v1.funcionario ON 
+	 ubisse_ubi_v1.venda.funcionario_codigo = ubisse_ubi_v1.funcionario.codigo 
+	INNER JOIN ubisse_ubi_v1.pessoa ON 
+	 ubisse_ubi_v1.funcionario.pessoa_codigo = ubisse_ubi_v1.pessoa.codigo 
+WHERE 
+	 ubisse_ubi_v1.venda.codigo = $P{CODIGO_VENDA} ) "nome_inicial",
+	(SELECT SUBSTR( ubisse_ubi_v1.pessoa.nome ,1,1)
+FROM ubisse_ubi_v1.venda
+	INNER JOIN ubisse_ubi_v1.funcionario ON 
+	 ubisse_ubi_v1.venda.funcionario_codigo = ubisse_ubi_v1.funcionario.codigo 
+	INNER JOIN ubisse_ubi_v1.pessoa ON 
+	 ubisse_ubi_v1.funcionario.pessoa_codigo = ubisse_ubi_v1.pessoa.codigo 
+WHERE 
+	 ubisse_ubi_v1.venda.codigo = $P{CODIGO_VENDA} ) "apelido_inicial"
+FROM ubisse_ubi_v1.items_venda
+	INNER JOIN ubisse_ubi_v1.venda ON 
+	 ubisse_ubi_v1.items_venda.venda_codigo = ubisse_ubi_v1.venda.codigo 
+	INNER JOIN ubisse_ubi_v1.cliente ON 
+	 ubisse_ubi_v1.venda.cliente_codigo = ubisse_ubi_v1.cliente.codigo 
+	INNER JOIN ubisse_ubi_v1.pessoa ON 
+	 ubisse_ubi_v1.cliente.pessoa_codigo = ubisse_ubi_v1.pessoa.codigo 
+	INNER JOIN ubisse_ubi_v1.produto ON 
+	 ubisse_ubi_v1.items_venda.produto_codigo = ubisse_ubi_v1.produto.codigo 
+	INNER JOIN ubisse_ubi_v1.venda_dinheiro ON 
+	 ubisse_ubi_v1.venda.codigo = ubisse_ubi_v1.venda_dinheiro.venda_codigo 
+WHERE 
+	 ubisse_ubi_v1.venda.codigo = $P{CODIGO_VENDA}]]>
+	</queryString>
+	<field name="valor_pago_iva" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="valor_pago_iva"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="venda"/>
+	</field>
+	<field name="percentagem_desconto" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="percentagem_desconto"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="venda"/>
+	</field>
+	<field name="valor_subtotal" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="valor_subtotal"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="venda"/>
+	</field>
+	<field name="valorTotal" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="valorTotal"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="venda"/>
+	</field>
+	<field name="valor_parcial" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="valor_parcial"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="items_venda"/>
+	</field>
+	<field name="quantidade" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="quantidade"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="items_venda"/>
+	</field>
+	<field name="codigo" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="codigo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="venda"/>
+	</field>
+	<field name="preco" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="preco"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="produto"/>
+	</field>
+	<field name="nome" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="nome"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="produto"/>
+	</field>
+	<field name="referencia" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="referencia"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="produto"/>
+	</field>
+	<field name="pessoa_nome" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="pessoa_nome"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pessoa"/>
+	</field>
+	<field name="nuit" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="nuit"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pessoa"/>
+	</field>
+	<field name="horario" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="horario"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="venda"/>
+	</field>
+	<field name="vd_codigo" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="vd_codigo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="venda_dinheiro"/>
+	</field>
+	<field name="descricao" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="descricao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="produto"/>
+	</field>
+	<field name="celular" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="celular"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pessoa"/>
+	</field>
+	<field name="localidade" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="localidade"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pessoa"/>
+	</field>
+	<field name="nome_funcionario" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="nome_funcionario"/>
+	</field>
+	<field name="apelido_funcionario" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="apelido_funcionario"/>
+	</field>
+	<field name="nome_inicial" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="nome_inicial"/>
+	</field>
+	<field name="apelido_inicial" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="apelido_inicial"/>
+	</field>
+	<variable name="apelido_inicial1" class="java.lang.Integer" calculation="DistinctCount">
+		<variableExpression><![CDATA[$F{apelido_inicial}]]></variableExpression>
+	</variable>
+	<pageHeader>
+		<band height="145">
+			<subreport>
+				<reportElement x="10" y="15" width="550" height="90" uuid="c911a09b-7cf5-4a27-8db9-760a15ca4a11"/>
+				<subreportParameter name="CODIGO_VENDA">
+					<subreportParameterExpression><![CDATA[$F{codigo}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["src/main/webapp/report/VDPadrao.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</pageHeader>
+	<lastPageFooter>
+		<band height="195"/>
+	</lastPageFooter>
+	<summary>
+		<band height="53">
+			<staticText>
+				<reportElement x="136" y="23" width="100" height="30" uuid="9dc101df-2724-43d4-bd41-99a1c28f4a31"/>
+				<text><![CDATA[nova pag]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

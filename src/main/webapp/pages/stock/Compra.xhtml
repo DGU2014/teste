@@ -1,0 +1,113 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="title">
+      Compra
+  
+	</ui:define>
+	<ui:define name="description">
+       Página dedicada a compra de Produtos.
+    </ui:define>
+
+	<ui:define name="body">
+		<adm:breadcrumb title="Compra" />
+
+		<h:form id="formCadastro">
+
+			<p:panelGrid id="painel" columns="4" layout="grid"
+				styleClass="panelgrid-noborder"
+				columnClasses="ui-grid-col-1,ui-grid-col-6,
+			     ui-grid-col-1, ui-grid-col-1">
+
+				<p:outputLabel value="Produto" for="produto" />
+				<p:selectOneMenu id="produto" filter="true" autoWidth="false"
+					style="max-width:800px;" value="#{compraBean.produto}"
+					converter="omnifaces.SelectItemsConverter" styleClass="ubi" panelStyle="ubi" panelStyleClass="ubi">
+					<f:selectItem noSelectionOption="true"
+						itemLabel="Selecione o Produto" />
+					<f:selectItems value="#{compraBean.produtos}" var="produto"
+						itemValue="#{produto}" itemLabel="#{produto.descricao}" />
+					<p:ajax listener="#{compraBean.mostrarNasTex}"
+						update=":formCadastro:quantidade :formCadastro:quantidadeVenda :formCadastro:valor" />
+				</p:selectOneMenu>
+
+				<p:outputLabel value="Stock" for="quantidade" />
+				<p:outputLabel id="quantidade"
+					value="#{compraBean.produto.quantidadeArmazenada}" />
+
+				<p:outputLabel value="Qtd" for="quantidadeVenda" />
+				<p:inputText readonly="false" id="quantidadeVenda"
+					value="#{compraBean.quantidade}" />
+
+
+				<p:outputLabel value="Valor Unitario" for="valor" />
+				<p:inputText id="valor" value="#{compraBean.produto.preco}" />
+
+
+				<p:commandButton icon="ui-icon-plus"
+					actionListener="#{compraBean.adicionar}"
+					update=":formCadastro:painel 
+						:formCadastro:tabelaEntrada">
+					<f:attribute name="produtoSelecionado" value="#{produto}" />
+				</p:commandButton>
+			</p:panelGrid>
+			<div class="ui-fluid"></div>
+			<p:dataTable id="tabelaEntrada"
+				style="position:relative;margin-top:10px"
+				emptyMessage="Nenhum registro encontrado." paginatorPosition="top"
+				value="#{compraBean.itemsRequisicaos}" var="itemAquisicao"
+				reflow="true">
+
+				<p:column headerText="Nome">
+					<h:outputText value="#{itemAquisicao.produto.descricao}" />
+				</p:column>
+				<p:column headerText="Quantidade">
+					<h:outputText value="#{itemAquisicao.quantidade}" />
+				</p:column>
+				<p:column headerText="Opções">
+					<p:commandButton icon="fa fa-minus"
+						actionListener="#{compraBean.remover}"
+						update=":formCadastro:tabelaEntrada">
+						<f:attribute name="itemSelecionado" value="#{itemAquisicao}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+
+			<p:panelGrid id="painell" columns="4" layout="grid"
+				style="margin-top:20px" styleClass="panelgrid-noborder"
+				columnClasses="ui-grid-col-2,ui-grid-col-3,ui-grid-col-2,ui-grid-col-2">
+
+
+				<p:outputLabel value="Fornecedor" for="fornecedor" />
+				<p:selectOneMenu id="fornecedor" filter="true"
+					value="#{compraBean.requisicaoProduto.fornecedor}"
+					converter="omnifaces.SelectItemsConverter">
+					<f:selectItem noSelectionOption="true" itemLabel="Fornecedor" />
+					<f:selectItems value="#{compraBean.fornecedors}" var="fornecedor"
+						itemValue="#{fornecedor}" itemLabel="#{fornecedor.pessoa.nome}" />
+				</p:selectOneMenu>
+
+				<p:outputLabel value="Valor Total das Entradas" />
+				<p:inputText value="#{compraBean.requisicaoProduto.valorTotal}">
+					<f:convertNumber locale="pt_PT" />
+				</p:inputText>
+				<p:outputLabel value="Data Aquisicao" />
+				<p:calendar value="#{compraBean.requisicaoProduto.dataRequisicao}" />
+
+			</p:panelGrid>
+			<p:panelGrid>
+				<p:commandButton value="Salvar"
+					actionListener="#{compraBean.salvar}" update="@form" />
+			</p:panelGrid>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

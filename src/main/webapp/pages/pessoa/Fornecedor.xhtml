@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="title">
+        Fornecedor
+    </ui:define>
+
+	<ui:define name="description">
+       Página dedicada ao cadastro, actualização e remoção de fornecedores.
+    </ui:define>
+
+	<ui:define name="body">
+		<adm:breadcrumb title="Fornecedor" />
+
+		<h:form id="formCadastro">
+			<p:messages id="messages" closable="true">
+				<p:effect type="pulsate" event="load" delay="500" />
+			</p:messages>
+
+			<p:toolbar style="margin-top: 10px">
+				<p:toolbarGroup>
+					<p:commandButton value="Novo" oncomplete="PF('dialogo').show();"
+						icon="fa fa-user-plus" styleClass="btn-block btn-primary"
+						actionListener="#{fornecedorBean.novo}"
+						update=":formDialogo:painel" />
+				</p:toolbarGroup>
+
+			</p:toolbar>
+		</h:form>
+
+		<h:form id="formListagem">
+			<p:dataTable id="tabela" rows="10" paginator="true"
+				emptyMessage="Nenhum registo encontrado" reflow="true"
+				value="#{fornecedorBean.fornecedors}" var="fornecedor">
+
+				<p:column headerText="Cdg" style="width:50px">
+					<h:outputText value="#{fornecedor.codigo}" />
+				</p:column>
+
+				<p:column filterBy="#{fornecedor.pessoa.nome}" headerText="Nome">
+					<h:outputText value="#{fornecedor.pessoa.nome}" />
+				</p:column>
+
+				<p:column headerText="Nuit" style="width:110px">
+					<h:outputText value="#{fornecedor.pessoa.nuit}" />
+				</p:column>
+
+				<p:column headerText="Celular" style="width:110px">
+					<h:outputText value="#{fornecedor.pessoa.celular}" />
+				</p:column>
+				<p:column headerText="Telefone" style="width:110px">
+					<h:outputText value="#{fornecedor.pessoa.telefone}" />
+				</p:column>
+
+				<p:column headerText="Localização" style="width:200px">
+					<h:outputText value="#{fornecedor.pessoa.localidade}" />
+				</p:column>
+
+				<p:column headerText="Opções" style="width:130px">
+					<div class="row">
+						<div class="col-sm-12 col-md-3">
+							<p:commandButton icon="fa fa-fw fa-edit"
+								styleClass="btn-block btn-primary" disabled="false"
+								update=":formDialogo:painel" oncomplete="PF('dialogo').show();"
+								actionListener="#{fornecedorBean.carregar}">
+								<f:attribute name="fornecedorSelecionado" value="#{fornecedor}" />
+								<f:actionListener
+									type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+							</p:commandButton>
+						</div>
+						<div class="col-sm-12 col-md-3">
+							<p:commandButton icon="fa fa-fw fa-remove"
+								styleClass="btn-block btn-danger"
+								actionListener="#{fornecedorBean.excluir}"
+								update="@form :formListagem:tabela">
+								<p:confirm header="Confirmação"
+									message="Deseja excluir o fornecedor?" icon="ui-icon-alert " />
+								<f:attribute name="fornecedorSelecionado" value="#{fornecedor}" />
+								<f:actionListener
+									type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+							</p:commandButton>
+						</div>
+					</div>
+				</p:column>
+			</p:dataTable>
+			<p:confirmDialog global="true">
+				<p:commandButton value="Sim" type="button"
+					styleClass="ui-confirmdialog-yes btn-block btn-warning"
+					icon="ui-icon-check" />
+				<p:commandButton value="Não" type="button"
+					styleClass="ui-confirmdialog-no btn-block btn-danger"
+					icon="ui-icon-close" />
+			</p:confirmDialog>
+		</h:form>
+
+
+		<p:dialog header="Cadastro do fornecedor" widgetVar="dialogo"
+			responsive="true" draggable="false" resizable="false" modal="true"
+			closable="false">
+
+			<h:form id="formDialogo">
+
+				<p:messages autoUpdate="true" />
+				<p:toolbar style="margin-top: 10px">
+					<p:toolbarGroup>
+						<p:panelGrid columns="2" layout="grid">
+							<p:commandButton value="Salvar"
+								styleClass="btn-block btn-success" icon="ui-icon-check"
+								actionListener="#{fornecedorBean.salvar}" update="@form" />
+
+							<p:commandButton value="Fechar" icon="fa fa-times-circle"
+								styleClass="btn-block btn-warning"
+								actionListener="#{fornecedorBean.inicializar}"
+								update=":formListagem:tabela" oncomplete="PF('dialogo').hide();" />
+						</p:panelGrid>
+					</p:toolbarGroup>
+				</p:toolbar>
+				<h:panelGroup id="fornecedorPainel" layout="block"
+					styleClass="ui-fluid">
+					<p:panelGrid id="painel" columns="1" layout="grid"
+						style="margin-top:20px" styleClass="panelgrid-noborder">
+
+						<p:inputText id="nome" value="#{fornecedorBean.pessoa.nome}"
+							placeholder="Digite o Nome" required="false"
+							requiredMessage="O Campo Nome e obrigatorio" />
+
+						<p:inputText id="localidade" placeholder="Digite a Localizacao"
+							value="#{fornecedorBean.pessoa.localidade}" required="false"
+							requiredMessage="O Campo Localizacao obrigatorio" />
+
+						<p:inputMask mask="999999999" id="nuit"
+							value="#{fornecedorBean.pessoa.nuit}" placeholder="Digite o Nuit" />
+
+						<p:inputText id="celular" placeholder="Digite o Nr do Celular"
+							value="#{fornecedorBean.pessoa.celular}" required="false"
+							requiredMessage="O Campo Celular e obrigatorio" />
+
+						<p:inputText id="telefone" placeholder="Digite o Nr do Telefone"
+							value="#{fornecedorBean.pessoa.telefone}" required="false"
+							requiredMessage="O Campo Telefone e obrigatorio" />
+
+						<p:inputText id="email" placeholder="Digite o Email"
+							value="#{fornecedorBean.pessoa.email1}" />
+
+					</p:panelGrid>
+
+				</h:panelGroup>
+			</h:form>
+
+		</p:dialog>
+
+
+	</ui:define>
+</ui:composition>

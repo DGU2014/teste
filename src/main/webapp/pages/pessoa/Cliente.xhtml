@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="title">
+      Clientes
+    </ui:define>
+	<ui:define name="description">
+       Página dedicada ao cadastro, actualização e remoção de clientes.
+    </ui:define>
+
+	<ui:define name="body">
+		<adm:breadcrumb title="Cliente" />
+
+		<h:form id="formCadastro">
+			<p:messages id="messages" closable="true">
+				<p:effect type="pulsate" event="load" delay="500" />
+			</p:messages>
+
+			<p:toolbar style="margin-botton: 10px">
+				<f:facet name="left">
+
+					<p:commandButton value="Novo" oncomplete="PF('dialogo').show();"
+						actionListener="#{clienteBean.novoCliente}"
+						icon="fa fa-user-plus" styleClass="btn-block btn-primary"
+						update=":formDialogo:painel" />
+
+				</f:facet>
+			</p:toolbar>
+
+		</h:form>
+
+		<h:form id="formListagem">
+			<p:dataTable id="tabela" rows="10" paginator="true"
+				emptyMessage="Nenhum registo encontrado" reflow="true"
+				value="#{clienteBean.clientes}" var="cliente">
+
+				<p:column headerText="Cdg" style="width:50px">
+					<h:outputText value="#{cliente.codigo}" />
+				</p:column>
+
+				<p:column filterBy="#{cliente.pessoa.nome}" headerText="Nome">
+					<h:outputText value="#{cliente.pessoa.nome}" />
+				</p:column>
+
+				<p:column headerText="Nuit" style="width:110px">
+					<h:outputText value="#{cliente.pessoa.nuit}" />
+				</p:column>
+
+				<p:column headerText="Celular" style="width:110px">
+					<h:outputText value="#{cliente.pessoa.celular}" />
+				</p:column>
+
+				<p:column headerText="Telefone" style="width:110px">
+					<h:outputText value="#{cliente.pessoa.telefone}" />
+				</p:column>
+
+				<p:column headerText="Localização" style="width:200px">
+					<h:outputText value="#{cliente.pessoa.localidade}" />
+				</p:column>
+
+				<p:column headerText="Opções" style="width:130px">
+					<div class="row">
+						<div class="col-sm-12 col-md-3">
+							<p:commandButton icon="fa fa-fw fa-edit"
+								styleClass="btn-block btn-primary" update=":formDialogo:painel"
+								oncomplete="PF('dialogo').show();"
+								actionListener="#{clienteBean.carregarCliente}">
+								<f:attribute name="clienteSelecionado" value="#{cliente}" />
+								<f:actionListener
+									type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+							</p:commandButton>
+						</div>
+
+						<div class="col-sm-12 col-md-3">
+							<p:commandButton icon="fa fa-fw fa-remove"
+								styleClass="btn-block btn-danger"
+								actionListener="#{clienteBean.excluir}"
+								update="@form :formListagem:tabela">
+								<p:confirm header="Confirmação"
+									message="Deseja excluir o Cliente?" icon="ui-icon-alert " />
+								<f:attribute name="clienteSelecionado" value="#{cliente}" />
+								<f:actionListener
+									type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+							</p:commandButton>
+						</div>
+					</div>
+				</p:column>
+			</p:dataTable>
+
+			<p:confirmDialog global="true">
+				<p:commandButton value="Sim" type="button"
+					styleClass="ui-confirmdialog-yes btn-block btn-warning"
+					icon="ui-icon-check" />
+				<p:commandButton value="Não" type="button"
+					styleClass="ui-confirmdialog-no btn-block btn-danger"
+					icon="ui-icon-close" />
+			</p:confirmDialog>
+		</h:form>
+
+
+		<p:dialog header="Cadastro do Cliente" widgetVar="dialogo"
+			responsive="true" draggable="false" resizable="false" modal="true"
+			closable="false">
+
+			<h:form id="formDialogo">
+
+				<p:messages autoUpdate="true" />
+				<p:toolbar style="margin-top: 10px">
+					<p:toolbarGroup>
+						<p:panelGrid columns="2" layout="grid">
+							<p:commandButton value="Salvar"
+								styleClass="btn-block btn-success" icon="ui-icon-check"
+								actionListener="#{clienteBean.salvar}" update="@form" />
+
+							<p:commandButton value="Fechar" icon="fa fa-times-circle"
+								styleClass="btn-block btn-warning"
+								actionListener="#{clienteBean.listarCliente}"
+								update=":formListagem:tabela" oncomplete="PF('dialogo').hide();" />
+						</p:panelGrid>
+					</p:toolbarGroup>
+				</p:toolbar>
+				<h:panelGroup id="clientePainel" layout="block"
+					styleClass="ui-fluid">
+					<p:panelGrid id="painel" columns="1" layout="grid"
+						style="margin-top:20px" styleClass="panelgrid-noborder">
+
+						<p:inputText id="nome" value="#{clienteBean.pessoa.nome}"
+							placeholder="Digite o Nome" required="true"
+							requiredMessage="O Campo Nome e obrigatorio" />
+
+						<p:inputText id="localidade" placeholder="Digite a Localizacao"
+							value="#{clienteBean.pessoa.localidade}" required="false"
+							requiredMessage="O Campo Localizacao obrigatorio" />
+
+						<p:inputMask mask="999999999" id="nuit"
+							value="#{clienteBean.pessoa.nuit}" placeholder="Digite o Nuit" />
+
+						<p:inputText id="celular" placeholder="Digite o Nr do Celular"
+							value="#{clienteBean.pessoa.celular}" required="false"
+							requiredMessage="O Campo Celular e obrigatorio" />
+
+						<p:inputText id="telefone" placeholder="Digite o Nr do Telefone"
+							value="#{clienteBean.pessoa.telefone}" required="false"
+							requiredMessage="O Campo Celular e obrigatorio" />
+
+						<p:inputText id="email" placeholder="Digite o Email"
+							value="#{clienteBean.pessoa.email1}" />
+
+					</p:panelGrid>
+
+				</h:panelGroup>
+			</h:form>
+
+		</p:dialog>
+
+
+	</ui:define>
+</ui:composition>

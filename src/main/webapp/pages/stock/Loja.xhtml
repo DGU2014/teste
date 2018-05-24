@@ -1,0 +1,205 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="title">
+      Loja
+    </ui:define>
+	<ui:define name="description">
+       Página dedicada ao Controlo de Produtos na Loja.
+    </ui:define>
+
+	<ui:define name="body">
+		<adm:breadcrumb title="Loja" />
+
+		<h:form id="formListagem">
+			<div class="box box-primary"
+				style="font-family: 'Helvetica Neue'; font-size: 15px">
+				<p:dataTable id="tabela" emptyMessage="Nenhum registo encontrado"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+					paginator="true" rows="10" value="#{produtoBean.produtos}"
+					var="produto" reflow="true">
+
+					<p:column headerText="Codigo" style="width:120px"
+						filterBy="#{produto.referencia}">
+						<h:outputText value="#{produto.referencia}" />
+					</p:column>
+					<p:column headerText="Categoria"
+						filterBy="#{produto.categoria.nome}">
+						<h:outputText value="#{produto.categoria.nome}" />
+					</p:column>
+					<p:column headerText="Descrição" filterBy="#{produto.descricao}">
+						<h:outputText value="#{produto.descricao}" />
+					</p:column>
+					<p:column headerText="Qtd Loja" style="width:75px">
+						<h:outputText value="#{produto.quantidade}" />
+					</p:column>
+					<p:column headerText="Preço S/Iva" style="width:90px">
+						<h:outputText value="#{produto.preco}" />
+					</p:column>
+					<p:column headerText="Preço C/Iva" style="width:90px">
+						<h:outputText value="#{produto.precoIva}" />
+					</p:column>
+
+					<p:column headerText="Opções" style="width:130px" rendered="false">
+
+						<p:commandButton icon="fa fa-external-link"
+							update=":formDialogo1:painel1"
+							oncomplete="PF('dialogo1').show();"
+							actionListener="#{produtoBean.carregarProduto}">
+							<f:attribute name="produtoSelecionado" value="#{produto}" />
+							<f:actionListener
+								type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+						</p:commandButton>
+
+						<p:commandButton icon="fa fa-external-link" value="Loja 2"
+							rendered="false" update=":formDialogo2:painel2"
+							oncomplete="PF('dialogo2').show();"
+							actionListener="#{produtoBean.carregarProduto}">
+							<f:attribute name="produtoSelecionado" value="#{produto}" />
+							<f:actionListener
+								type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+						</p:commandButton>
+
+					</p:column>
+
+				</p:dataTable>
+			</div>
+		</h:form>
+
+		<!-- Dialogo  Actalizar Botle store-->
+		<p:dialog header="Actualizar Loja" widgetVar="dialogo1"
+			draggable="false" resizable="false" closable="false"
+			responsive="true" style="min-width:300px">
+
+			<h:form id="formDialogo1">
+
+				<p:messages closable="true" id="msg" />
+
+				<h:panelGroup id="contadorPainel1" layout="block"
+					styleClass="ui-fluid">
+					<p:panelGrid id="painel1" columns="2" layout="grid"
+						style="margin-top:20px; width:400px"
+						styleClass="panelgrid-noborder"
+						columnClasses="ui-grid-col-4,ui-grid-col-10">
+
+						<p:outputLabel for="categoria" value="Categoria:" />
+						<p:selectOneMenu id="categoria" filter="true"
+							value="#{produtoBean.produto.categoria}" disabled="true"
+							converter="omnifaces.SelectItemsConverter" required="true"
+							requiredMessage="O campo Tipo de Categoria e obrigatorio">
+							<f:selectItem noSelectionOption="true"
+								itemLabel="Selecione a Categoria" />
+							<f:selectItems value="#{produtoBean.categorias}" var="categoria"
+								itemValue="#{categoria}" itemLabel="#{categoria.nome}" />
+						</p:selectOneMenu>
+
+						<p:outputLabel value="Descrição" for="descricao" />
+						<p:inputText id="descricao" disabled="true"
+							value="#{produtoBean.produto.descricao}" required="true"
+							requiredMessage="O campo Descrição e obrigatorio" />
+
+						<p:outputLabel value="Preco" for="preco" />
+						<p:inputText id="preco" value="#{produtoBean.produto.preco}"
+							required="true" disabled="true"
+							requiredMessage="O Preco do produto e obrigatorio">
+							<f:convertNumber locale="pt_PT" minFractionDigits="2" />
+							<f:validateDoubleRange minimum="0.01" maximum="999999.99" />
+						</p:inputText>
+						<p:outputLabel value="Q.Loja" for="quantidade" style="color:red" />
+						<p:outputLabel id="quantidade" readonly="true" style="color:red"
+							value="#{produtoBean.produto.quantidade}" required="true"
+							requiredMessage="A quantidade do produto e obrigatorio">
+						</p:outputLabel>
+
+						<p:outputLabel value="Qtd Minima" for="quantidadeMinima" />
+						<p:spinner id="quantidadeMinima" min="2" disabled="true"
+							value="#{produtoBean.produto.estoqueMinimo}" required="true"
+							requiredMessage="A quantidade minima do estoque do produto e obrigatoria" />
+
+						<p:outputLabel value="Estado" for="estado" />
+						<p:selectBooleanCheckbox id="estado" disabled="true"
+							value="#{produtoBean.produto.estado}" required="true"
+							requiredMessage="O campo Estado e obrigatorio" />
+					</p:panelGrid>
+
+					<h:panelGrid layout="grid" styleClass="panelgrid-noborder"
+						columns="2">
+						<p:commandButton value="Salvar" icon="ui-icon-check"
+							actionListener="#{produtoBean.salvar}"
+							update="@form :formListagem:tabela" />
+
+						<p:commandButton value="Cancelar" icon="ui-icon-close"
+							actionListener="#{produtoBean.limpar}"
+							update="@form :formListagem:tabela"
+							oncomplete="PF('dialogo1').hide();" />
+					</h:panelGrid>
+				</h:panelGroup>
+			</h:form>
+		</p:dialog>
+
+		<!-- Dialogo  Actalizar Botle store fora-->
+		<p:dialog header="Actualizar Loja" widgetVar="dialogo2"
+			draggable="false" resizable="false" closable="false"
+			responsive="true" style="min-width:300px">
+
+			<h:form id="formDialogo2">
+
+				<p:messages closable="true">
+					<p:effect type="pulsate" event="load" delay="500" />
+				</p:messages>
+
+				<h:panelGroup id="contadorPainel2" layout="block"
+					styleClass="ui-fluid">
+					<p:panelGrid id="painel2" columns="2" layout="grid"
+						style="margin-top:20px; width:400px"
+						styleClass="panelgrid-noborder"
+						columnClasses="ui-grid-col-4,ui-grid-col-10">
+
+						<p:outputLabel for="categoria" value="Categoria:" />
+						<p:selectOneMenu id="categoria" filter="true"
+							value="#{produtoBean.produto.categoria}" disabled="true"
+							converter="omnifaces.SelectItemsConverter" required="true"
+							requiredMessage="O campo Tipo de Categoria e obrigatorio">
+							<f:selectItem noSelectionOption="true"
+								itemLabel="Selecione a Categoria" />
+							<f:selectItems value="#{produtoBean.categorias}" var="categoria"
+								itemValue="#{categoria}" itemLabel="#{categoria.nome}" />
+						</p:selectOneMenu>
+
+						<p:outputLabel value="Descrição" for="descricao" />
+						<p:inputText id="descricao" disabled="true"
+							value="#{produtoBean.produto.descricao}" required="true"
+							requiredMessage="O campo Descrição e obrigatorio" />
+
+						<p:outputLabel value="Preco" for="preco" />
+						<p:inputText id="preco" value="#{produtoBean.produto.preco}"
+							required="true" disabled="true"
+							requiredMessage="O Preco do produto e obrigatorio">
+							<f:convertNumber locale="pt_PT" minFractionDigits="2" />
+							<f:validateDoubleRange minimum="0.01" maximum="999999.99" />
+						</p:inputText>
+
+					</p:panelGrid>
+
+					<h:panelGrid layout="grid" styleClass="panelgrid-noborder"
+						columns="2">
+						<p:commandButton value="Salvar" icon="ui-icon-check"
+							actionListener="#{produtoBean.salvar}"
+							update="@form :formListagem:tabela" />
+
+						<p:commandButton value="Cancelar" icon="ui-icon-close"
+							actionListener="#{produtoBean.limpar}"
+							update="@form :formListagem:tabela"
+							oncomplete="PF('dialogo2').hide();" />
+					</h:panelGrid>
+				</h:panelGroup>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

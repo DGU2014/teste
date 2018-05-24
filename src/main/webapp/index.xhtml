@@ -1,0 +1,42 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="WEB-INF/templates/template.xhtml">
+
+
+
+	<ui:define name="head-end">
+		<ui:param name="renderBreadCrumb" value="false" />
+	</ui:define>
+
+	<ui:define name="title">
+		<p:autoUpdate life="4000" />
+
+		<h2 class="align-center">
+			Bem Vindo ao <span class="text-aqua"> <i><a href="#"
+					target="_blank" style="text-transform: none; text-decoration: none">
+						UBI</a></i></span> Gestão Comercial! <br />
+		</h2>
+
+	</ui:define>
+
+
+	<ui:define name="body">
+
+		<div class="box box-primary"
+			style="font-family: 'Helvetica Neue'; font-size: 15px">
+			<div class="box-header with-border">
+			<p:graphicImage style="display: block; margin-left: auto; margin-right: auto" cache="false" height="auto" width="auto" 
+											name="images/ubiLogo/#{empresaBean.empresa.codigo}.png"
+											value="images/ubiLogo/#{empresaBean.empresa.codigo}.png" />
+			
+	
+				<ui:include src="pages/relatorio/estoqueNegativo.xhtml" rendered="#{autenticacaoBean.temPermissoes(['A'])}"/>
+			</div>
+
+			<div class="box-body"></div>
+		</div>
+
+	
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,183 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="title">
+     Utilizador
+    </ui:define>
+	<ui:define name="description">
+       Página ao controlo dos Utilizadores.
+    </ui:define>
+
+	<ui:define name="body">
+		<adm:breadcrumb title="Utilizador" />
+
+		<h:form id="formListagem">
+
+			<p:toolbar style="margin-top: 10px">
+				<p:toolbarGroup>
+					<p:commandButton value="Novo" actionListener="#{usuarioBean.novo}"
+						update=":formDialogo:painel" oncomplete="PF('dialogo').show();">
+						<f:actionListener
+							type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+					</p:commandButton>
+
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:dataTable id="tabela" emptyMessage="Nenhum registo encontrado"
+				paginator="false" value="#{usuarioBean.usuarios}" var="usuario"
+				reflow="true">
+
+				<p:column headerText="Codigo" style="width:65px">
+					<h:outputText value="#{usuario.codigo}" />
+				</p:column>
+				<p:column headerText="Nome">
+					<h:outputText
+						value="#{usuario.funcionario.pessoa.nome} #{usuario.funcionario.pessoa.apelido}" />
+				</p:column>
+				<p:column headerText="Perfil" style="width:155px">
+					<h:outputText value="#{usuario.tipoFormatado}" />
+				</p:column>
+				<p:column headerText="Activo" style="width:65px">
+					<h:outputText value="#{usuario.activoFormatado}" />
+				</p:column>
+
+				<p:column headerText="Opções" style="width:85px">
+
+					<p:commandButton icon="ui-icon-trash "
+						actionListener="#{usuarioBean.excluir}"
+						update="@form :formListagem:tabela">
+						<p:confirm header="Confirmacao"
+							message="Deseja excluir o Utilizador ?" icon="ui-icon-alert " />
+						<f:attribute name="usuarioSelecionado" value="#{usuario}" />
+						<f:actionListener
+							type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+					</p:commandButton>
+
+					<p:commandButton icon=" ui-icon-pencil"
+						update=":formDialogo2:painel2" oncomplete="PF('dialogo2').show();"
+						actionListener="#{usuarioBean.carregarUsuario}">
+						<f:attribute name="usuarioSelecionado" value="#{usuario}" />
+						<f:actionListener
+							type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+			<p:confirmDialog global="true">
+				<p:commandButton value="Sim" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="Nao" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+		</h:form>
+
+		<p:dialog header="Cadastro de Utilizadores" widgetVar="dialogo"
+			draggable="false" resizable="false" closable="true" responsive="true"
+			style="min-width:300px">
+			<h:form id="formDialogo">
+
+				<p:toolbar style="margin-top: 10px">
+					<p:toolbarGroup>
+						<p:commandButton value="Salvar" icon="ui-icon-check"
+							actionListener="#{usuarioBean.salvar}"
+							update="messages @form :formListagem:tabela" />
+					</p:toolbarGroup>
+				</p:toolbar>
+
+				<div class="ui-fluid">
+
+					<p:panelGrid id="painel" columns="2" layout="grid"
+						style="margin-top:20px" styleClass="panelgrid-noborder"
+						columnClasses="ui-grid-col-4,ui-grid-col-10">
+
+						<p:outputLabel for="nome" value="Nome do Funcionario:" />
+						<h:selectOneMenu id="nome" filter="true"
+							value="#{usuarioBean.usuario.funcionario}"
+							converter="omnifaces.SelectItemsConverter" required="true"
+							requiredMessage="O campo Tipo de Nome é Obrigatorio">
+							<f:selectItem noSelectionOption="true"
+								itemLabel="Selecione o Nome do Funcionario" />
+							<f:selectItems value="#{usuarioBean.funcionarios}"
+								var="funcionario" itemValue="#{funcionario}"
+								itemLabel="#{funcionario.pessoa.nome} #{funcionario.pessoa.apelido}" />
+						</h:selectOneMenu>
+
+						<p:outputLabel for="utilizador" value="Utilizador" />
+						<p:inputText id="utilizador"
+							value="#{usuarioBean.usuario.usuario}" />
+
+						<p:outputLabel for="senha" value="Senha:" />
+						<p:password id="senha"
+							value="#{usuarioBean.usuario.senhaSemCriptografia}" />
+
+						<p:outputLabel for="tipo" value="Tipo Funcionario" />
+						<h:selectOneMenu id="tipo" value="#{usuarioBean.usuario.tipo}"
+							required="true"
+							requiredMessage="O campo Tipo de Funcionario é Obrigatorio">
+							<f:selectItem noSelectionOption="true"
+								itemLabel="Selecione o Nome do Funcionario" />
+							<f:selectItem itemValue="A" itemLabel="Administrador" />
+							<f:selectItem itemValue="G" itemLabel="Gerente" />
+							<f:selectItem itemValue="V" itemLabel="Vendedor" />
+						</h:selectOneMenu>
+						<p:outputLabel value="Estado" />
+						<p:selectBooleanCheckbox value="#{usuarioBean.usuario.ativo}" />
+
+					</p:panelGrid>
+				</div>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog header="Editar Utilizadores" widgetVar="dialogo2"
+			draggable="false" resizable="false" closable="true" responsive="true"
+			style="min-width:300px">
+			<h:form id="formDialogo2">
+
+				<p:toolbar style="margin-top: 10px">
+					<p:toolbarGroup>
+						<p:commandButton value="Salvar" icon="ui-icon-check"
+							actionListener="#{usuarioBean.salvar}"
+							update="messages @form :formListagem:tabela" />
+					</p:toolbarGroup>
+				</p:toolbar>
+
+				<div class="ui-fluid">
+
+					<p:panelGrid id="painel2" columns="2" layout="grid"
+						style="margin-top:20px" styleClass="panelgrid-noborder"
+						columnClasses="ui-grid-col-4,ui-grid-col-4">
+
+						<p:outputLabel for="utilizador" value="Utilizador" />
+						<p:inputText id="utilizador"
+							value="#{usuarioBean.usuario.usuario}" />
+
+						<p:outputLabel for="senha" value="Senha:" />
+						<p:password id="senha"
+							value="#{usuarioBean.usuario.senhaSemCriptografia}"
+							required="true" requiredMessage="O Campo senha é Obrigatorio" />
+
+						<p:outputLabel for="tipo" value="Tipo Funcionario" />
+						<p:selectOneMenu id="tipo" value="#{usuarioBean.usuario.tipo}"
+							required="true"
+							requiredMessage="O campo Tipo de Funcionario é Obrigatorio">
+							<f:selectItem noSelectionOption="true"
+								itemLabel="Selecione o Nome do Funcionario" />
+							<f:selectItem itemValue="G" itemLabel="Gerente" />
+							<f:selectItem itemValue="V" itemLabel="Vendedor" />
+						</p:selectOneMenu>
+
+						<p:outputLabel value="Estado" />
+						<p:selectBooleanCheckbox value="#{usuarioBean.usuario.ativo}" />
+
+					</p:panelGrid>
+				</div>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ficheiro_cot" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e0fe209c-cea4-4a8e-8fdd-e82d89fe15f9">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[select *from rubrica_mss order by Deecricao_rub asc;]]>
+	</queryString>
+	<field name="id_rub" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Deecricao_rub" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Custo_rub" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Obs_rub" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Iva_rub" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tipo_rubrica" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="class_rub" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="NR" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="variable1" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{id_rub}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="97" splitType="Stretch">
+			<staticText>
+				<reportElement x="12" y="62" width="208" height="14" uuid="6979b137-0533-46c1-a10f-de2e55fb39e2"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Cédula n° DESP/213/DGA/07]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="12" y="72" width="208" height="14" uuid="86f184c5-70f2-4d36-ad15-da7a83ab8851"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Av. 25 de Setembro 1509 5° Andar `a directa porta 56]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="82" width="205" height="14" uuid="7ed2d016-e94c-485f-bf17-3c52b646f3bc"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Telefax: 21333630 / NUIT: 400 190331]]></text>
+			</staticText>
+			<line>
+				<reportElement x="5" y="-3" width="567" height="1" forecolor="#999999" backcolor="#999999" uuid="dd977827-bd0b-47d7-ad41-9445c07526ac"/>
+				<graphicElement>
+					<pen lineWidth="2.0" lineStyle="Double" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="5" y="-16" width="545" height="11" uuid="a1deacc9-af28-4c4d-b65f-242d1e423954"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Consultoria & Serviços Aduaneiros  Av. 25 de Setembro 1509 5° Andar `a directa porta 56   Telefax: 21333630 / NUIT: 400 190331]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="528" y="4" width="40" height="20" uuid="bbbd61cd-3bf9-46d5-b5a0-9dd96eafe58f"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="66" y="0" width="117" height="58" uuid="84af7d65-f58b-4dd3-bdaf-f53c7fe4b474"/>
+				<imageExpression><![CDATA["C:\\wamp\\www\\DPAD\\dpad\\pf\\Consad11.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="32" splitType="Stretch">
+			<line>
+				<reportElement x="15" y="21" width="535" height="1" forecolor="#CCCCCC" uuid="d7efc26a-9610-40ce-b45e-9dbacb542ccd"/>
+				<graphicElement>
+					<pen lineWidth="12.0"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="21" y="14" width="199" height="15" forecolor="#3333FF" uuid="89296bf1-5080-4b00-ba65-dd23cc150086"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Lista de rúbricas]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="18" splitType="Stretch">
+			<line>
+				<reportElement x="100" y="8" width="346" height="1" forecolor="#CCCCCC" uuid="0484d366-4fca-444c-b5ee-0c2fde9d786f"/>
+				<graphicElement>
+					<pen lineWidth="12.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="450" y="8" width="100" height="1" forecolor="#CCCCCC" uuid="dedb46a8-f404-4cf6-938d-9db9735a4a2d"/>
+				<graphicElement>
+					<pen lineWidth="12.0"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="104" y="2" width="339" height="14" uuid="7c61382a-3a8a-4017-90ec-07abc5fe61f1"/>
+				<textFieldExpression><![CDATA[$F{Deecricao_rub}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="429" y="2" width="105" height="13" uuid="11c568ef-7b8b-468f-b699-517cd86b3743"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{Custo_rub}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="15" y="9" width="78" height="1" forecolor="#CCCCCC" uuid="97e29c1c-cde7-4289-8040-69981026ee37"/>
+				<graphicElement>
+					<pen lineWidth="12.0"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="23" y="4" width="70" height="13" uuid="5960f862-ba67-442f-ac1e-3df83aeca0a9"/>
+				<textFieldExpression><![CDATA[$F{id_rub}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="12" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="6" width="572" height="1" forecolor="#999999" backcolor="#999999" uuid="3730435b-4963-48a9-955a-bfe0964c42ea"/>
+				<graphicElement>
+					<pen lineWidth="2.0" lineStyle="Double" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<summary>
+		<band height="24">
+			<staticText>
+				<reportElement x="183" y="2" width="260" height="14" uuid="2a5aaeb2-d1df-404f-a9b9-45d9d6c40533"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Total das Rúbricas]]></text>
+			</staticText>
+			<line>
+				<reportElement x="450" y="7" width="100" height="1" forecolor="#CCCCCC" uuid="cd40808c-090b-4a56-9d59-aa41f1065ac6"/>
+				<graphicElement>
+					<pen lineWidth="12.0"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="450" y="0" width="84" height="14" forecolor="#0000FF" uuid="0e1350a7-9414-470c-a654-8208c030e8bc"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{variable1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

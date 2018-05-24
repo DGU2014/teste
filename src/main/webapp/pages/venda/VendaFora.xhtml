@@ -1,0 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="title">
+        Vendas Fora da Loja
+    </ui:define>
+
+	<ui:define name="description">
+       Página dedicada a Venda de Produtos fora da Loja.
+    </ui:define>
+
+	<ui:define name="body">
+		<adm:breadcrumb title="VendaFora" />
+		<div class="box-header with-border">
+			<div class="callout callout-info">
+				<p:outputLabel value="#{autenticacaoBean.script}" />
+			</div>
+		</div>
+		<h:form id="formCadastro" rendered="#{autenticacaoBean.activado}">
+			<div class="ui-fluid">
+				<p:messages autoUpdate="true" />
+				<p:panelGrid id="painel" columns="4" layout="grid"
+					styleClass="panelgrid-noborder"
+					columnClasses="ui-grid-col-1,ui-grid-col-6,
+			     ui-grid-col-1, ui-grid-col-3">
+
+					<p:outputLabel value="Produto" for="produto" />
+					<p:selectOneMenu id="produto" filter="true"
+						value="#{vendaForaBean.produto}"
+						converter="omnifaces.SelectItemsConverter">
+						<f:selectItem noSelectionOption="true"
+							itemLabel="Selecione o Produto" />
+						<f:selectItems value="#{vendaForaBean.produtos}" var="produto"
+							itemValue="#{produto}"
+							itemLabel="#{produto.descricao} (#{produto.categoria.nome})" />
+						<p:ajax listener="#{vendaForaBean.mostrarNasTex}"
+							update=":formCadastro:quantidade :formCadastro:quantidadeVenda :formCadastro:valor" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Stock" for="quantidade" />
+					<p:inputText disabled="true" readonly="true" id="quantidade"
+						value="#{vendaForaBean.produto.quantidadeLojaFora}" />
+					<p:outputLabel value="Quantidade" for="quantidadeVenda" />
+					<p:inputText style="width:70px" readonly="false"
+						id="quantidadeVenda" value="#{vendaForaBean.quantidade}" />
+					<p:outputLabel value="Valor Unitario" for="valor" />
+					<p:inputText disabled="true" readonly="true" id="valor"
+						value="#{vendaForaBean.produto.preco}">
+						<f:convertNumber locale="pt_PT" minFractionDigits="2" />
+						<f:validateDoubleRange minimum="0.01" maximum="9999.99" />
+					</p:inputText>
+
+					<p:commandButton icon="ui-icon-plus"
+						actionListener="#{vendaForaBean.adicionar}"
+						style="margin-top:-5px"
+						update=":formCadastro:painel 
+						:formCadastro:tabelaCesto formCadastro:painelFinalizacao :formCadastro:painell">
+						<f:attribute name="produtoSelecionado" value="#{produto}" />
+					</p:commandButton>
+				</p:panelGrid>
+
+			</div>
+
+			<p:dataTable id="tabelaCesto" style="margin-top:10px"
+				emptyMessage="Nenhum registro encontrado." paginator="true"
+				paginatorPosition="top" value="#{vendaForaBean.itemsVendas}"
+				var="itemVenda" rows="5" reflow="true">
+
+				<p:column headerText="Descrisao">
+					<h:outputText value="#{itemVenda.produto.descricao}" />
+				</p:column>
+				<p:column headerText="Preço Unitario">
+					<h:outputText value="#{itemVenda.produto.preco}">
+						<f:convertNumber locale="pt_PT" minFractionDigits="2" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Quantidade">
+					<h:outputText value="#{itemVenda.quantidade}" />
+				</p:column>
+				<p:column headerText="Preço Parcial">
+					<h:outputText value="#{itemVenda.valorParcial}">
+						<f:convertNumber locale="pt_PT" minFractionDigits="2" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Opções">
+					<p:commandButton icon="ui-icon-minus"
+						actionListener="#{vendaForaBean.remover}"
+						update=":formCadastro:tabelaCesto formCadastro:painelFinalizacao :formCadastro:painell">
+						<f:attribute name="itemSelecionado" value="#{itemVenda}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+
+			<p:panelGrid id="painell" columns="4" layout="grid"
+				style="margin-top:10px" styleClass="panelgrid-noborder"
+				columnClasses="ui-grid-col-1,ui-grid-col-3,ui-grid-col-1,ui-grid-col-3">
+
+				<p:outputLabel value="Cliente:" for="nomeCliente" rendered="false" />
+				<p:selectOneMenu value="#{vendaForaBean.venda.cliente}"
+					id="nomeCliente" disabled="#{vendaForaBean.botaoCliente}"
+					rendered="false" converter="omnifaces.SelectItemsConverter"
+					filter="true">
+					<f:selectItem itemDisabled="#{vendaForaBean.item}"
+						itemValue="#{vendaForaBean.venda.cliente}"
+						itemLabel="#{vendaForaBean.venda.cliente.pessoa.nome}" />
+					<f:selectItem noSelectionOption="true"
+						itemLabel="Selecione um Cliente" />
+					<f:selectItems value="#{vendaForaBean.clientes}" var="cliente"
+						itemValue="#{cliente}" itemLabel="#{cliente.pessoa.nome}" />
+				</p:selectOneMenu>
+
+				<p:outputLabel value="Valor Pago" />
+				<p:inputText value="#{vendaForaBean.venda.valorPago}"
+					disabled="#{vendaForaBean.botaoCliente}">
+					<f:convertNumber locale="pt_PT" />
+					<f:ajax listener="#{vendaForaBean.calcularTroco}" event="keyup"
+						render="valorTroco btnFinalizar" />
+				</p:inputText>
+
+				<p:outputLabel value="Valor Troco" />
+				<p:outputLabel id="valorTroco"
+					value="#{vendaForaBean.venda.valorTroco}" style="color:red" />
+
+			</p:panelGrid>
+
+
+			<p:panel header="Finalização" visible="false">
+				<p:panelGrid id="painelFinalizacao1" columns="10" layout="grid">
+					<p:outputLabel value="SubTotal: MZ" />
+					<h:outputText value="#{vendaForaBean.venda.valorSubtotal}"
+						id="valorSubtotal">
+						<f:convertNumber locale="pt_PT" minFractionDigits="2" />
+					</h:outputText>
+					<p:outputLabel value="Valor Iva: MZ" />
+					<h:outputText value="#{vendaForaBean.venda.valorPagoIva}">
+						<f:convertNumber locale="pt_PT" minFractionDigits="2" />
+					</h:outputText>
+					<p:outputLabel value="Total: MZ" />
+					<h:outputText value="#{vendaForaBean.venda.valorTotal}">
+						<f:convertNumber locale="pt_PT" minFractionDigits="2" />
+					</h:outputText>
+					<p:selectOneRadio value="#{vendaForaBean.tipoVenda}">
+						<f:selectItem itemValue="VD" itemLabel="V.Dinheiro" />
+						<f:selectItem itemValue="Cotacao" itemLabel="Cotação" />
+					</p:selectOneRadio>
+					<p:commandButton value="Finalizar"
+						oncomplete="PF('dialogoImprimir').show();"
+						actionListener="#{vendaForaBean.salvar}"
+						update="@form :formCadastro:painell formCadastro:tabelaCesto :formCadastro:painel :formCadastro" />
+				</p:panelGrid>
+
+				<p:confirmDialog responsive="true" global="true">
+					<p:commandButton value="Sim" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					<p:commandButton value="Nao" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+
+			</p:panel>
+
+			<p:panel header="Finalização">
+				<p:panelGrid id="painelFinalizacao" columns="10" layout="grid">
+					<p:outputLabel value="Total: MZ" />
+					<h:outputText value="#{vendaForaBean.venda.valorTotal}">
+						<f:convertNumber locale="pt_PT" minFractionDigits="2" />
+					</h:outputText>
+
+					<p:commandButton value="Finalizar" id="btnFinalizar"
+						disabled="#{vendaForaBean.finalizar}"
+						oncomplete="PF('dialogoImprimir').show();"
+						actionListener="#{vendaForaBean.salvar}"
+						update="@form :formCadastro:painell formCadastro:tabelaCesto :formCadastro:painel :formCadastro
+						 :formImprimir:painelImprimir" />
+				</p:panelGrid>
+			</p:panel>
+		</h:form>
+
+		<p:dialog widgetVar="dialogoImprimir" responsive="true"
+			draggable="false" resizable="false" modal="true" closable="false">
+			<div align="center">
+
+				<h:form id="formImprimir" style="text-align: center;">
+
+					<br />
+					<p:messages autoUpdate="true" />
+					<br />
+					<p:panelGrid id="painelImprimir" columns="4" layout="grid">
+
+						<p:commandButton id="btnFechar"
+							disabled="#{vendaForaBean.botaoFinal}" value="Fechar"
+							icon="fa fa-times-circle"
+							oncomplete="PF('dialogoImprimir').hide();"
+							actionListener="#{vendaForaBean.redicionar}" />
+					</p:panelGrid>
+					<br />
+				</h:form>
+
+			</div>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

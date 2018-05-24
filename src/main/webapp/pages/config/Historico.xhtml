@@ -1,0 +1,32 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="title">
+     Historico
+    </ui:define>
+	<ui:define name="description">
+       Página dedicada ao Relatório de utilização do Sistema UBI.
+    </ui:define>
+
+	<ui:define name="body">
+		<adm:breadcrumb title="Historico" />
+		
+		<h:form id="formListagem">
+
+			<p:dataTable paginator="true" rows="20" reflow="true"
+				value="#{historicoBean.historicos}" var="historico">
+				<p:column headerText="Historico">
+					<h:outputText value="#{historico.historico} " />
+					<h:outputText value="#{historico.data}" />
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

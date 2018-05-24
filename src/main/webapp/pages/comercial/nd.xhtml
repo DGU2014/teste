@@ -1,0 +1,116 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:adm="http://github.com/adminfaces"
+	template="/WEB-INF/templates/template.xhtml">
+
+	<ui:define name="title">
+     Nota de Debidos
+    </ui:define>
+	<ui:define name="description">
+      Página dedicada a visualização das notas de debidos emitidos.
+    </ui:define>
+
+	<ui:define name="body">
+		<adm:breadcrumb title="nota de debido" />
+
+		<h:form id="formPesquisa">
+
+			<p:toolbar style="margin-top: 10px">
+				<p:toolbarGroup>
+
+					<p:selectOneRadio value="#{notaDeDebidoBean.pesquisa}"
+						style="width: 280px;">
+						<f:selectItem itemLabel="Diario" itemValue="1" />
+						<f:selectItem itemLabel="Entervalo de dias" itemValue="2" />
+						<f:ajax listener="#{notaDeDebidoBean.adicionarComponentes}"
+							render="formPesquisaComponentes formListagem:tabela formListagem:total" />
+					</p:selectOneRadio>
+
+				</p:toolbarGroup>
+			</p:toolbar>
+		</h:form>
+
+		<h:form id="formPesquisaComponentes">
+
+			<p:panelGrid id="painel" columns="4" layout="grid"
+				style="margin-top:20px" styleClass="panelgrid-noborder"
+				columnClasses="ui-grid-col-2,ui-grid-col-4,
+			ui-grid-col-2, ui-grid-col-4">
+
+				<h:outputLabel value="Dia"
+					rendered="#{notaDeDebidoBean.dataComponenteLabel}" />
+				<h:outputLabel value="Data Inicio"
+					rendered="#{notaDeDebidoBean.dataInicioComponente}" />
+				<p:calendar id="dia" navigator="true" effect="fold"
+					rendered="#{notaDeDebidoBean.dataComponente}"
+					value="#{notaDeDebidoBean.dataUnico}">
+					<f:ajax listener="#{notaDeDebidoBean.listar}" event="dateSelect"
+						render="formListagem:tabela formListagem:total formPesquisaComponentes:fim" />
+				</p:calendar>
+
+				<h:outputLabel value="Data Fim"
+					rendered="#{notaDeDebidoBean.dataFimComponente}" />
+				<p:calendar id="fim" navigator="true" required="false"
+					disabled="#{notaDeDebidoBean.calendario2}"
+					rendered="#{notaDeDebidoBean.dataFimComponente}"
+					value="#{notaDeDebidoBean.dataFim}">
+					<f:ajax listener="#{notaDeDebidoBean.listar}" event="dateSelect"
+						render="formListagem:tabela formListagem:total" />
+				</p:calendar>
+
+			</p:panelGrid>
+
+		</h:form>
+		<h:form id="formListagem">
+			<p:dataTable id="tabela" value="#{notaDeDebidoBean.notaDeDebidos}"
+				emptyMessage="Nenhuma Venda Efectuada nesta Data"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+				paginator="true" rows="10" style="margin-bottom:20px" var="nota"
+				reflow="true">
+
+				<p:column headerText="Cod" style="width:50px">
+					<h:outputText value="#{nota.codigo}" />
+				</p:column>
+				<p:column headerText="Hora" style="width:168px">
+					<h:outputText value="#{nota.dataDeEmissao}" />
+				</p:column>
+
+				<p:column headerText="Subtotal" style="width:100px">
+					<h:outputText value="#{nota.valorSubtotal}" />
+				</p:column>
+
+				<p:column headerText="Iva" style="width:100px">
+					<h:outputText value="#{nota.valorPagoIva}" />
+				</p:column>
+
+				<p:column headerText="Total" style="width:100px">
+					<h:outputText value="#{nota.valorTotal}" />
+				</p:column>
+
+				<p:column headerText="Nr Da Factura" style="width:100px">
+					<h:outputText value="#{nota.factura.codigo}" />
+				</p:column>
+
+				<p:column headerText="Data Da Factura" style="width:100px">
+					<h:outputText value="#{nota.factura.dataFacturacao}" />
+				</p:column>
+
+				<p:column headerText="Opcoes">
+					<p:commandButton value="Imprimir"
+						actionListener="#{notaDeDebidoBean.imprimir}"
+						update=":formListagem:tabela" ajax="false"
+						onclick="this.form.target='_blank'">
+						<f:attribute name="vendaSelecionada" value="#{nota}" />
+						<f:actionListener
+							type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+					</p:commandButton>
+				</p:column>
+
+			</p:dataTable>
+
+		</h:form>
+	</ui:define>
+</ui:composition>

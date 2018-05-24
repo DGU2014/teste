@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Sub" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7d90bbeb-9a95-4173-bd16-643523435e4c">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ubi"/>
+	<parameter name="CODIGO_VENDA" class="java.lang.Long"/>
+	<queryString>
+		<![CDATA[SELECT ubisse_ubi_v1.empresa.banco1,
+	ubisse_ubi_v1.empresa.banco2,
+	ubisse_ubi_v1.empresa.banco3,
+	ubisse_ubi_v1.empresa.banco4,
+	ubisse_ubi_v1.empresa.conta1,
+	ubisse_ubi_v1.empresa.conta2,
+	ubisse_ubi_v1.empresa.conta3,
+	ubisse_ubi_v1.empresa.conta4,
+	ubisse_ubi_v1.empresa.nib1,
+	ubisse_ubi_v1.empresa.nib2,
+	ubisse_ubi_v1.empresa.nib3,
+	ubisse_ubi_v1.empresa.nib4
+FROM ubisse_ubi_v1.items_venda
+	INNER JOIN ubisse_ubi_v1.venda ON 
+	 ubisse_ubi_v1.items_venda.venda_codigo = ubisse_ubi_v1.venda.codigo 
+	INNER JOIN ubisse_ubi_v1.cliente ON 
+	 ubisse_ubi_v1.venda.cliente_codigo = ubisse_ubi_v1.cliente.codigo 
+	INNER JOIN ubisse_ubi_v1.pessoa ON 
+	 ubisse_ubi_v1.cliente.pessoa_codigo = ubisse_ubi_v1.pessoa.codigo 
+	INNER JOIN ubisse_ubi_v1.produto ON 
+	 ubisse_ubi_v1.items_venda.produto_codigo = ubisse_ubi_v1.produto.codigo 
+	INNER JOIN ubisse_ubi_v1.venda_dinheiro ON 
+	 ubisse_ubi_v1.venda.codigo = ubisse_ubi_v1.venda_dinheiro.venda_codigo 
+	INNER JOIN ubisse_ubi_v1.empresa ON 
+	 ubisse_ubi_v1.pessoa.empresa_codigo = ubisse_ubi_v1.empresa.codigo 
+WHERE 
+	 ubisse_ubi_v1.venda.codigo = $P{CODIGO_VENDA}]]>
+	</queryString>
+	<field name="banco1" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="banco1"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="empresa"/>
+	</field>
+	<field name="banco2" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="banco2"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="empresa"/>
+	</field>
+	<field name="banco3" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="banco3"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="empresa"/>
+	</field>
+	<field name="banco4" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="banco4"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="empresa"/>
+	</field>
+	<field name="conta1" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="conta1"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="empresa"/>
+	</field>
+	<field name="conta2" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="conta2"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="empresa"/>
+	</field>
+	<field name="conta3" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="conta3"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="empresa"/>
+	</field>
+	<field name="conta4" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="conta4"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="empresa"/>
+	</field>
+	<field name="nib1" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="nib1"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="empresa"/>
+	</field>
+	<field name="nib2" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="nib2"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="empresa"/>
+	</field>
+	<field name="nib3" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="nib3"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="empresa"/>
+	</field>
+	<field name="nib4" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="nib4"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="empresa"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="0" width="278" height="30" uuid="6d5d9346-2d7f-4dc6-98e8-ee7ab7c83ca4">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="29063c3e-56c9-467f-8b10-84b0b798ab83"/>
+					<printWhenExpression><![CDATA[$F{conta1} !=null]]></printWhenExpression>
+				</reportElement>
+				<text><![CDATA[banco1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="278" y="0" width="277" height="30" isPrintWhenDetailOverflows="true" uuid="992ab628-056e-4b45-9263-bcb56e889023">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="60f6f59e-ca86-46f0-a6a1-bcb62da1c889"/>
+					<printWhenExpression><![CDATA[$F{conta2} !=null]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[banco2]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="278" height="30" uuid="3c4ac971-9951-4dc1-bf76-f3ced7fa9c50">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="29063c3e-56c9-467f-8b10-84b0b798ab83"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{banco1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="278" y="0" width="277" height="30" uuid="5e83ac37-9a8f-40c8-a7ce-f477bd20ab77">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="60f6f59e-ca86-46f0-a6a1-bcb62da1c889"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{banco2}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
