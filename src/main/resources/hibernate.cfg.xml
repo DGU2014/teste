@@ -4,13 +4,13 @@
 <hibernate-configuration>
  <session-factory>
   <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-  <property name="connection.url">jdbc:mysql://localhost:3306/ubisse_ubi_v1</property>
-  <property name="connection.username">root</property>
-  <property name="connection.password"/>
+  <property name="connection.url">jdbc:mysql://jws-app-mysql:3306/ubisse_ubi_v1</property>
+  <property name="connection.username">ubisse</property>
+  <property name="connection.password">ubi021BAe1a</property>
   <!-- Pool de Conexões -->
   <property name="hibernate.connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property>
   <property name="hibernate.c3p0.min_size">3</property>
-  <property name="hibernate.c3p0.max_size">10</property>
+  <property name="hibernate.c3p0.max_size">20</property>
   <property name="hibernate.c3p0.timeout">300</property>
   <property name="hibernate.c3p0.max_statements">50</property>
   <property name="hibernate.c3p0.idle_test_period">300</property>
