@@ -356,6 +356,8 @@ public class VendaBean implements Serializable {
 		moradaCompleta = empresaReselva.getMorada() + " - " + empresaReselva.getCidade();
 		isencao = empresaReselva.getIsencao();
 
+		System.out.println("isemcao " + isencao);
+
 		if (empresaReselva.getTelefone().isEmpty()) {
 			System.out.println("Telefone nullo");
 			if (!empresaReselva.getCelular().isEmpty() && !empresaReselva.getCelular2().isEmpty()
